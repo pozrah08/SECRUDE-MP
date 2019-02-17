@@ -119,11 +119,11 @@ public class Register extends javax.swing.JPanel {
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
         boolean foundUser = false;
-        ArrayList <User> userList = new ArrayList<>();
+        ArrayList <User> userList;
         
         username = usernameFld.getText();
-        password1 = Arrays.toString(passwordFld.getPassword());
-        password2 = Arrays.toString(confirmPassFld.getPassword());
+        password1 = passwordFld.getText();
+        password2 = confirmPassFld.getText();
         userList = frame.main.sqlite.getUsers();
         
         for(int i = 0; i < userList.size(); i++){
@@ -134,6 +134,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!foundUser){
+            
             if(password1.equals(password2)){
                 frame.registerAction(usernameFld.getText(), password1);
                 System.out.println("REGISTER SUCCESSFUL");
