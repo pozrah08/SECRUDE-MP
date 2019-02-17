@@ -118,13 +118,19 @@ public class Register extends javax.swing.JPanel {
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
-        boolean foundUser = false;
+        boolean foundUser, hasUppercase, hasNum;
         ArrayList <User> userList;
         
+        //retrieving data and inputs
         username = usernameFld.getText();
-        password1 = passwordFld.getText();
-        password2 = confirmPassFld.getText();
+        password1 = passwordFld.getText().trim();
+        password2 = confirmPassFld.getText().trim();
         userList = frame.main.sqlite.getUsers();
+        
+        //initalizing booleans
+        foundUser = false;
+        hasUppercase = false;
+        hasNum = false;
         
         for(int i = 0; i < userList.size(); i++){
             if(username.equalsIgnoreCase(userList.get(i).getUsername())){
@@ -136,9 +142,30 @@ public class Register extends javax.swing.JPanel {
         if(!foundUser){
             
             if(password1.equals(password2)){
-                frame.registerAction(usernameFld.getText(), password1);
-                System.out.println("REGISTER SUCCESSFUL");
-                frame.loginNav();
+                if(password1.length() != 0){
+                    char[] passwordArray = password1.toCharArray();
+                    
+                    for(int i = 0; i < passwordArray.length; i++){
+                        if(passwordArray[i] > 64 && passwordArray[i] < 91){ //check if the password has an uppercase character
+                            hasUppercase = true;
+                        }
+                        
+                        if(passwordArray[i] > 47 && passwordArray[i] < 58){ // check if the password has a number
+                            hasNum = true;
+                        }
+                    }
+                    
+                    if(hasUppercase && hasNum){
+                        frame.registerAction(usernameFld.getText(), password1);
+                        System.out.println("REGISTER SUCCESSFUL");
+                        frame.loginNav();
+                    } else {
+                        System.out.println("PASSWORD MUST HAVE AT LEAST ONE UPPERCASE CHARACTER AND NUMBER");
+                    }
+                    
+                } else {
+                    System.out.println("INVALID PASSWORD");
+                }
             }else {
                 System.out.println("===-"+ usernameFld.getText() + "-===");
                 System.out.println("PASSWORD 1("  + password1 + ") does not match with PASSWORD 2 (" + password2 + ")");
