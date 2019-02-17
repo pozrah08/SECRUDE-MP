@@ -1,6 +1,10 @@
 
 package View;
 
+import Model.User;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
@@ -95,7 +99,33 @@ public class Login extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        frame.mainNav();
+        String username, password;
+        boolean found = false;
+        User user = new User("username", "password");
+        ArrayList<User> users = frame.main.sqlite.getUsers();
+        
+        username = usernameFld.getText();
+        password = passwordFld.getText();
+        
+        
+     
+        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+            if(users.get(nCtr).getUsername().equals(username)){
+                if(users.get(nCtr).getPassword().equals(password)){
+                    user = users.get(nCtr);
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        if(found){
+            frame.mainNav(user.getRole());
+        }else{
+            System.out.println("Invalid Credentials!");
+            //ALERT
+        }
+        
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed

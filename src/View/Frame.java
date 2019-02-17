@@ -234,7 +234,24 @@ public class Frame extends javax.swing.JFrame {
         this.setVisible(true);
     }
     
-    public void mainNav(){
+    public void mainNav(int role){
+        adminBtn.setVisible(false);
+        managerBtn.setVisible(false);
+        staffBtn.setVisible(false);
+        clientBtn.setVisible(false);
+        
+        switch(role){
+            case 2: clientBtn.setVisible(true);
+                    break;
+            case 3: staffBtn.setVisible(true);
+                    break;
+            case 4: managerBtn.setVisible(true);
+                    break;
+            case 5: adminBtn.setVisible(true);
+                    break;
+            default: System.out.println("USER'S ACCOUNT IS DISABLED");
+        }
+        
         frameView.show(Container, "homePnl");
     }
     
