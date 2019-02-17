@@ -1,6 +1,8 @@
 
 package View;
 
+import Model.User;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Register extends javax.swing.JPanel {
@@ -115,20 +117,35 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        String password1, password2;
+        String password1, password2, username;
+        boolean foundUser = false;
+        ArrayList <User> userList = new ArrayList<>();
+        
+        username = usernameFld.getText();
         password1 = Arrays.toString(passwordFld.getPassword());
         password2 = Arrays.toString(confirmPassFld.getPassword());
+        userList = frame.main.sqlite.getUsers();
         
-        if(password1.equals(password2)){
-            frame.registerAction(usernameFld.getText(), password1);
-            System.out.println("REGISTER SUCCESSFUL");
-            frame.loginNav();
-        }else {
-            System.out.println("===-"+ usernameFld.getText() + "-===");
-            System.out.println("PASSWORD 1("  + password1 + ") does not match with PASSWORD 2 (" + password2 + ")");
-        //ALERT THEM
+        for(int i = 0; i < userList.size(); i++){
+            if(username.equalsIgnoreCase(userList.get(i).getUsername())){
+                foundUser = true;
+                break; // break out of loop
+            }
         }
         
+        if(!foundUser){
+            if(password1.equals(password2)){
+                frame.registerAction(usernameFld.getText(), password1);
+                System.out.println("REGISTER SUCCESSFUL");
+                frame.loginNav();
+            }else {
+                System.out.println("===-"+ usernameFld.getText() + "-===");
+                System.out.println("PASSWORD 1("  + password1 + ") does not match with PASSWORD 2 (" + password2 + ")");
+            //ALERT THEM
+            }
+        } else {
+            System.out.println("User " + username + " already exists!");
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
