@@ -266,6 +266,20 @@ public class Register extends javax.swing.JPanel {
         if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6){
             frame.registerAction(usernameFld.getText(), hashString(password1));
             System.out.println("REGISTER SUCCESSFUL");
+            
+             //clearing fields
+            usernameFld.setText("");
+            passwordFld.setText("");
+            confirmPassFld.setText("");
+        
+            //clearing the error messages
+            userErrorMsg.setVisible(false);
+            userErrorMsg1.setVisible(false);
+            passwordErrorMsg.setVisible(false);
+            confErrorMsg.setVisible(false);
+            passwordLbl.setForeground(Color.black);
+            
+            
             frame.loginNav();
         }           
         
