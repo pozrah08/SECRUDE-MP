@@ -2,6 +2,9 @@
 package View;
 
 import Model.User;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class Login extends javax.swing.JPanel {
@@ -109,6 +112,27 @@ public class Login extends javax.swing.JPanel {
         passwordFld.getAccessibleContext().setAccessibleName("PASSWORD");
     }// </editor-fold>//GEN-END:initComponents
 
+public static String hashString(String input) { 
+        try { 
+            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+  
+            byte[] messageDigest = md.digest(input.getBytes()); 
+
+            BigInteger no = new BigInteger(1, messageDigest); 
+
+            String hashtext = no.toString(16); 
+ 
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+  
+            return hashtext; 
+        } 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        } 
+    }      
+    
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
         String username, password;
         boolean found = false;
@@ -116,10 +140,8 @@ public class Login extends javax.swing.JPanel {
         ArrayList<User> users = frame.main.sqlite.getUsers();
         
         username = usernameFld.getText();
-        password = passwordFld.getText();
+        password = hashString(passwordFld.getText());
         
-        
-     
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             if(users.get(nCtr).getUsername().equals(username)){
                 if(users.get(nCtr).getPassword().equals(password)){
@@ -132,7 +154,9 @@ public class Login extends javax.swing.JPanel {
         
         if(found){
             frame.mainNav(user.getRole());
-        
+            
+            System.out.println("Login Successfull: " + username + " & " + password);
+            
             //reset fields
             usernameFld.setText("");
             passwordFld.setText("");

@@ -4,6 +4,9 @@ package View;
 import Model.User;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.math.BigInteger; 
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
 
 public class Register extends javax.swing.JPanel {
 
@@ -167,6 +170,28 @@ public class Register extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+   public static String hashString(String input) { 
+        try { 
+            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+  
+            byte[] messageDigest = md.digest(input.getBytes()); 
+
+            BigInteger no = new BigInteger(1, messageDigest); 
+
+            String hashtext = no.toString(16); 
+ 
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+  
+            return hashtext; 
+        } 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        } 
+    }  
+    
+    
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
         boolean foundUser, hasUppercase, hasNum, passIs6, uNameIs6, passMatch;
@@ -206,6 +231,7 @@ public class Register extends javax.swing.JPanel {
         if(!password1.equals(password2)){
             passMatch = false;
             confErrorMsg.setVisible(true);
+            System.out.println("Password 1 (" + password1 + ") Password 2(" + password2 + ")");
         }
         
         char[] passwordArray = password1.toCharArray();
@@ -238,7 +264,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6){
-            frame.registerAction(usernameFld.getText(), password1);
+            frame.registerAction(usernameFld.getText(), hashString(password1));
             System.out.println("REGISTER SUCCESSFUL");
             frame.loginNav();
         }           
