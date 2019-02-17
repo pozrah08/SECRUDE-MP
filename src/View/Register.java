@@ -1,6 +1,8 @@
 
 package View;
 
+import java.util.Arrays;
+
 public class Register extends javax.swing.JPanel {
 
     public Frame frame;
@@ -113,8 +115,20 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        frame.registerAction(usernameFld.getText(), passwordFld.getPassword().toString(), confirmPassFld.getPassword().toString());
-        frame.loginNav();
+        String password1, password2;
+        password1 = Arrays.toString(passwordFld.getPassword());
+        password2 = Arrays.toString(confirmPassFld.getPassword());
+        
+        if(password1.equals(password2)){
+            frame.registerAction(usernameFld.getText(), password1);
+            System.out.println("REGISTER SUCCESSFUL");
+            frame.loginNav();
+        }else {
+            System.out.println("===-"+ usernameFld.getText() + "-===");
+            System.out.println("PASSWORD 1("  + password1 + ") does not match with PASSWORD 2 (" + password2 + ")");
+        //ALERT THEM
+        }
+        
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
