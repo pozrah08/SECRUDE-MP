@@ -3,7 +3,6 @@ package View;
 
 import Model.User;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Register extends javax.swing.JPanel {
 
@@ -156,9 +155,11 @@ public class Register extends javax.swing.JPanel {
                     }
                     
                     if(hasUppercase && hasNum){
-                        frame.registerAction(usernameFld.getText(), password1);
-                        System.out.println("REGISTER SUCCESSFUL");
-                        frame.loginNav();
+                        if(username.length() >= 6 && password1.length() >= 6){
+                            frame.registerAction(usernameFld.getText(), password1);
+                            System.out.println("REGISTER SUCCESSFUL");
+                            frame.loginNav();
+                        }
                     } else {
                         System.out.println("PASSWORD MUST HAVE AT LEAST ONE UPPERCASE CHARACTER AND NUMBER");
                     }
