@@ -11,6 +11,7 @@ public class Login extends javax.swing.JPanel {
     public Login() {
         initComponents();
         errorMsg.setVisible(false);
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -131,6 +132,13 @@ public class Login extends javax.swing.JPanel {
         
         if(found){
             frame.mainNav(user.getRole());
+        
+            //reset fields
+            usernameFld.setText("");
+            passwordFld.setText("");
+            
+            //clear error msg
+            errorMsg.setVisible(false);
         }else{
             System.out.println("Invalid Credentials!");
             errorMsg.setVisible(true);
