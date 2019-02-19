@@ -155,7 +155,9 @@ public static String hashString(String input) {
         if(found){
             frame.mainNav(user.getRole());
             
-            System.out.println("Login Successfull: " + username + " & " + password);
+            System.out.println("===Login Successful=== ");
+            System.out.println("Username: " + username);
+            System.out.println("Password: " + password);
             
             //reset fields
             usernameFld.setText("");
