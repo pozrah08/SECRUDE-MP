@@ -173,7 +173,7 @@ public class Register extends javax.swing.JPanel {
     
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
-        boolean foundUser, hasUppercase, hasNum, passIs6, uNameIs6, passMatch;
+        boolean foundUser, hasUppercase, hasNum, passIs6, uNameIs6, passMatch, hasSpecialChar;
         ArrayList <User> userList;
         
         //retrieving data and inputs
@@ -189,6 +189,7 @@ public class Register extends javax.swing.JPanel {
         passIs6 = true;
         uNameIs6 = true;
         passMatch = true;
+        hasSpecialChar = false;
         
         //clearing the error messages
         userErrorMsg.setVisible(false);
@@ -197,7 +198,17 @@ public class Register extends javax.swing.JPanel {
         confErrorMsg.setVisible(false);
         passwordLbl.setForeground(Color.black);
         
-        
+        //check if username has special characters
+        char[] usernameArray = username.toCharArray();
+         for(int i = 0; i < usernameArray.length; i++){
+            if(usernameArray[i] < 48 || //48 - 57 is equal to 0 - 9 in ascii
+                 (usernameArray[i] > 57 && usernameArray[i] < 65) || //65 - 90 is uppercase characters
+                    (usernameArray[i] > 90 && usernameArray[i] < 97) || // 97 - 122 is lowercase characters
+                        usernameArray[i] > 122){  //special characters
+                hasSpecialChar = true;
+            }
+        }
+         
         //check if username already exists
         for(int i = 0; i < userList.size(); i++){
             if(username.equalsIgnoreCase(userList.get(i).getUsername())){
@@ -213,6 +224,7 @@ public class Register extends javax.swing.JPanel {
             System.out.println("Password 1 (" + password1 + ") Password 2(" + password2 + ")");
         }
         
+        //verifying password validity
         char[] passwordArray = password1.toCharArray();
         for(int i = 0; i < passwordArray.length; i++){
             if(passwordArray[i] > 64 && passwordArray[i] < 91){ //check if the password has an uppercase character
