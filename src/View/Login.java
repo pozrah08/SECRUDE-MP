@@ -13,8 +13,7 @@ public class Login extends javax.swing.JPanel {
     
     public Login() {
         initComponents();
-        errorMsg.setVisible(false);
-        
+        errorMsg.setVisible(false);     
     }
 
     @SuppressWarnings("unchecked")
@@ -151,18 +150,25 @@ public static String hashString(String input) {
         }
         
         if(found){
-            frame.mainNav(user.getRole());
+            int role = user.getRole();
             
-            System.out.println("===Login Successful=== ");
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
+            if(role != 1){
+                frame.mainNav(role);
             
-            //reset fields
-            usernameFld.setText("");
-            passwordFld.setText("");
+                System.out.println("===Login Successful=== ");
+                System.out.println("Username: " + username);
+                System.out.println("Password: " + password);
             
-            //clear error msg
-            errorMsg.setVisible(false);
+                //reset fields
+                usernameFld.setText("");
+                passwordFld.setText("");
+            
+                //clear error msg
+                errorMsg.setVisible(false);
+            }else {
+                System.out.println("ACCOUNT IS DISABLED. CANNOT LOG IN");
+            }
+            
         }else{
             System.out.println("Invalid Credentials!");
             errorMsg.setVisible(true);
