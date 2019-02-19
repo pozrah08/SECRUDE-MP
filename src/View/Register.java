@@ -211,6 +211,7 @@ public class Register extends javax.swing.JPanel {
         passwordErrorMsg.setVisible(false);
         confErrorMsg.setVisible(false);
         usernameLbl.setForeground(Color.black);
+        passwordLbl.setForeground(Color.black);
         
         //check if username has special characters
         char[] usernameArray = username.toCharArray();
@@ -253,7 +254,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!hasUppercase || !hasNum){
-            usernameLbl.setForeground(Color.red);
+            passwordLbl.setForeground(Color.red);
         }
         
         if(username.length() < 6){
