@@ -154,12 +154,13 @@ public class Register extends javax.swing.JPanel {
                         .addComponent(userErrorMsg)
                         .addGap(30, 30, 30)))
                 .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(passwordErrorMsg)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(passwordLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(passwordLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(passwordErrorMsg)))
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(confirmPassFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,28 +170,6 @@ public class Register extends javax.swing.JPanel {
                 .addContainerGap(36, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-   public static String hashString(String input) { 
-        try { 
-            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
-  
-            byte[] messageDigest = md.digest(input.getBytes()); 
-
-            BigInteger no = new BigInteger(1, messageDigest); 
-
-            String hashtext = no.toString(16); 
- 
-            while (hashtext.length() < 32) { 
-                hashtext = "0" + hashtext; 
-            } 
-  
-            return hashtext; 
-        } 
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e); 
-        } 
-    }  
-    
     
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
@@ -264,7 +243,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6){
-            frame.registerAction(usernameFld.getText(), hashString(password1));
+            frame.registerAction(usernameFld.getText(), password1);
             System.out.println("REGISTER SUCCESSFUL");
             
              //clearing fields

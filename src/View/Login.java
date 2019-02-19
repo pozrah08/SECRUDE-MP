@@ -143,7 +143,7 @@ public static String hashString(String input) {
         password = hashString(passwordFld.getText());
         
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
-            if(users.get(nCtr).getUsername().equals(username)){
+            if(users.get(nCtr).getUsername().equalsIgnoreCase(username)){
                 if(users.get(nCtr).getPassword().equals(password)){
                     user = users.get(nCtr);
                     found = true;

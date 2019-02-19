@@ -1,6 +1,9 @@
 package Controller;
 
 import Model.User;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -66,6 +69,25 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
+        
+        // hash the password
+        try { 
+            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+  
+            byte[] messageDigest = md.digest(password.getBytes()); 
+
+            BigInteger no = new BigInteger(1, messageDigest); 
+
+            password = no.toString(16); 
+ 
+            while (password.length() < 32) { 
+                password = "0" + password; 
+            } 
+        } 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        }
+        
         String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
@@ -82,6 +104,25 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
+        
+        // hash the password
+        try { 
+            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+  
+            byte[] messageDigest = md.digest(password.getBytes()); 
+
+            BigInteger no = new BigInteger(1, messageDigest); 
+
+            password = no.toString(16); 
+ 
+            while (password.length() < 32) { 
+                password = "0" + password; 
+            } 
+        } 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        }
+        
         String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
