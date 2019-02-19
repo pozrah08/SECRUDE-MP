@@ -253,7 +253,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!hasUppercase || !hasNum){
-            usernameLbl.setForeground(Color.red);
+            passwordLbl.setForeground(Color.red);
         }
         
         if(username.length() < 6){
