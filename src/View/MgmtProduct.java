@@ -242,6 +242,21 @@ public class MgmtProduct extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+            
+                //      CLEAR TABLE
+                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                    tableModel.removeRow(0);
+                }
+
+                 //      LOAD CONTENTS
+                ArrayList<Product> products = sqlite.getProduct();
+                for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                    tableModel.addRow(new Object[]{
+                        products.get(nCtr).getName(), 
+                        products.get(nCtr).getStock(), 
+                        products.get(nCtr).getPrice()});
+                }
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
