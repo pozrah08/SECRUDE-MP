@@ -202,6 +202,21 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                
+                //      CLEAR TABLE
+               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                   tableModel.removeRow(0);
+               }
+
+                //      LOAD CONTENTS
+               ArrayList<User> users = sqlite.getUsers();
+               for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                   tableModel.addRow(new Object[]{
+                       users.get(nCtr).getUsername(), 
+                       users.get(nCtr).getPassword(), 
+                       users.get(nCtr).getRole(), 
+                       users.get(nCtr).getLocked()});
+               }
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
