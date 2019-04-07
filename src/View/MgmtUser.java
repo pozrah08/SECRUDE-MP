@@ -179,7 +179,9 @@ public class MgmtUser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
+         if(table.getSelectedRow() >= 0){
+            String selectedUser = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+            
             String[] options = {"1-DISABLED","2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
             JComboBox optionList = new JComboBox(options);
             
@@ -191,7 +193,24 @@ public class MgmtUser extends javax.swing.JPanel {
             if(result != null){
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
+                
+                sqlite.editUserRole(selectedUser, Integer.parseInt(result.charAt(0) + ""));
             }
+            
+             //      CLEAR TABLE
+               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                   tableModel.removeRow(0);
+               }
+
+                //      LOAD CONTENTS
+               ArrayList<User> users = sqlite.getUsers();
+               for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                   tableModel.addRow(new Object[]{
+                       users.get(nCtr).getUsername(), 
+                       users.get(nCtr).getPassword(), 
+                       users.get(nCtr).getRole(), 
+                       users.get(nCtr).getLocked()});
+               }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
@@ -282,6 +301,11 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.OK_OPTION) {
                 System.out.println(password.getText());
                 System.out.println(confpass.getText());
+                
+                if(password.getText().equals(confpass.getText())){
+                    sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
+                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + "changed passwords to " + password.getText());
+                }
             }
         }
     }//GEN-LAST:event_chgpassBtnActionPerformed

@@ -211,7 +211,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                
-                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Integer.parseInt(priceFld.getText()));
+                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
                 
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -255,8 +255,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                 
-                sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
-                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Integer.parseInt(priceFld.getText()));
+                sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
                 
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){

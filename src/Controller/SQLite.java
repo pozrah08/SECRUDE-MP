@@ -318,13 +318,13 @@ public class SQLite {
         } catch (Exception ex) {}
     }
     
-    public void removeProduct(String productname) {
-        String sql = "DELETE FROM product WHERE name='" + productname + "';";
+    public void removeProduct(String name) {
+        String sql = "DELETE FROM product WHERE name='" + name + "';";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("The product " + productname + " has been deleted.");
+            System.out.println("The product " + name + " has been deleted.");
         } catch (Exception ex) {}
     }
     
@@ -339,5 +339,50 @@ public class SQLite {
                                    rs.getFloat("price"));
         } catch (Exception ex) {}
         return product;
+    }
+    
+    public void updateProduct(String oldName, String newName, int newStock, double newPrice){
+        String sql = "UPDATE product SET name='" + newName + "', stock='" +  newStock + "', price='" + newPrice + "' WHERE name='" + oldName + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+        } catch (Exception ex) {}
+    }
+    
+    public void changePassword(String username, String password){
+        try { 
+            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+  
+            byte[] messageDigest = md.digest(password.getBytes()); 
+
+            BigInteger no = new BigInteger(1, messageDigest); 
+
+            password = no.toString(16); 
+ 
+            while (password.length() < 32) { 
+                password = "0" + password; 
+            } 
+        } 
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
+        }
+               
+        String sql = "UPDATE users SET password='" + password + "' WHERE username='" + username + "';";
+             
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+        } catch (Exception ex) {}
+    }
+    
+    public void editUserRole(String username, int role){
+        String sql = "UPDATE users SET role = " + role + " WHERE username = '" + username + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {}
     }
 }
