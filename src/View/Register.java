@@ -143,10 +143,7 @@ public class Register extends javax.swing.JPanel {
         //check if username has special characters
         char[] usernameArray = username.toCharArray();
          for(int i = 0; i < usernameArray.length; i++){
-            if(usernameArray[i] < 48 || //48 - 57 is equal to 0 - 9 in ascii
-                 (usernameArray[i] > 57 && usernameArray[i] < 65) || //65 - 90 is uppercase characters
-                    (usernameArray[i] > 90 && usernameArray[i] < 97) || // 97 - 122 is lowercase characters
-                        usernameArray[i] > 122){  //special characters
+            if(!(Character.isDigit(usernameArray[i])) && !(Character.isLetter(usernameArray[i]))){  //special characters
                 hasSpecialChar = true;
 //                usernameLbl.setForeground(Color.red);
             }
@@ -171,11 +168,11 @@ public class Register extends javax.swing.JPanel {
         //verifying password validity
         char[] passwordArray = password1.toCharArray();
         for(int i = 0; i < passwordArray.length; i++){
-            if(passwordArray[i] > 64 && passwordArray[i] < 91){ //check if the password has an uppercase character
+            if(Character.isUpperCase(passwordArray[i])){ //check if the password has an uppercase character
                 hasUppercase = true;
             }
  
-            if(passwordArray[i] > 47 && passwordArray[i] < 58){ // check if the password has a number
+            if(Character.isDigit(passwordArray[i])){ // check if the password has a number
                 hasNum = true;
             }
         }
