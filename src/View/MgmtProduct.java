@@ -206,9 +206,31 @@ public class MgmtProduct extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "ADD PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-            System.out.println(nameFld.getText());
-            System.out.println(stockFld.getText());
-            System.out.println(priceFld.getText());
+            if(Integer.parseInt(stockFld.getText()) > 0 && Integer.parseInt(priceFld.getText()) > 0){
+                System.out.println(nameFld.getText());
+                System.out.println(stockFld.getText());
+                System.out.println(priceFld.getText());
+               
+                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Integer.parseInt(priceFld.getText()));
+                
+                //      CLEAR TABLE
+                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                    tableModel.removeRow(0);
+                }
+
+                //      LOAD CONTENTS
+                ArrayList<Product> products = sqlite.getProduct();
+                for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                    tableModel.addRow(new Object[]{
+                        products.get(nCtr).getName(), 
+                        products.get(nCtr).getStock(), 
+                        products.get(nCtr).getPrice()});
+                }
+                
+            }else{
+                System.out.println("PLEASE ENTER A VALID AMOUNT");
+            }
+            
         }
     }//GEN-LAST:event_addBtnActionPerformed
 
