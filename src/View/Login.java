@@ -150,20 +150,25 @@ public class Login extends javax.swing.JPanel {
         
         if(found){
             int role = user.getRole();
+            int locked = user.getLocked();
             
             if(role != 1){
-                frame.mainNav(role);
+                if(locked == 0){
+                    frame.mainNav(role);
             
-                System.out.println("===Login Successful=== ");
-                System.out.println("Username: " + username);
-                System.out.println("Password: " + password);
-            
-                //reset fields
-                usernameFld.setText("");
-                passwordFld.setText("");
-            
-                //clear error msg
-                errorMsg.setVisible(false);
+                    System.out.println("===Login Successful=== ");
+                    System.out.println("Username: " + username);
+                    System.out.println("Password: " + password);
+
+                    //reset fields
+                    usernameFld.setText("");
+                    passwordFld.setText("");
+
+                    //clear error msg
+                    errorMsg.setVisible(false);
+                }else{
+                    System.out.println("ACCOUNT IS LOCKED. CONTACT AN ADMIN TO UNLOCK YOUR ACCOUNT");
+                }
             }else {
                 System.out.println("ACCOUNT IS DISABLED. CANNOT LOG IN");
             }
