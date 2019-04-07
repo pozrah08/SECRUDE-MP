@@ -183,8 +183,33 @@ public class MgmtProduct extends javax.swing.JPanel {
             };
 
             int result = JOptionPane.showConfirmDialog(null, message, "PURCHASE PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
-
+            
             if (result == JOptionPane.OK_OPTION) {
+                int stock = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString());
+                int toBuy = Integer.parseInt(stockFld.getText());
+                
+                if( stock > 0 && stock >= toBuy){
+                    String product = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+                    
+                    sqlite.updateProduct(product, product, stock - toBuy, Double.parseDouble(tableModel.getValueAt(table.getSelectedRow(), 2).toString()));
+                    
+                    //      CLEAR TABLE
+                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                        tableModel.removeRow(0);
+                    }
+
+                    //      LOAD CONTENTS
+                    ArrayList<Product> products = sqlite.getProduct();
+                    for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                        tableModel.addRow(new Object[]{
+                            products.get(nCtr).getName(), 
+                            products.get(nCtr).getStock(), 
+                            products.get(nCtr).getPrice()});
+                    }
+                }else{
+                    System.out.println("NOT ENOUGH ON STOCK.");
+                }
+                
                 System.out.println(stockFld.getText());
             }
         }
@@ -206,7 +231,7 @@ public class MgmtProduct extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "ADD PRODUCT", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-            if(Integer.parseInt(stockFld.getText()) > 0 && Integer.parseInt(priceFld.getText()) > 0){
+            if(Integer.parseInt(stockFld.getText()) > 0 && Double.parseDouble(priceFld.getText()) > 0){
                 System.out.println(nameFld.getText());
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
