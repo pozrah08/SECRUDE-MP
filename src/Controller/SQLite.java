@@ -298,6 +298,16 @@ public class SQLite {
         } catch (Exception ex) {}
     }
     
+    public void toggleUserLock(String username, int lock){
+        String sql = "UPDATE users SET locked = " + lock + " WHERE username = '" + username + "';";
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            Statement stmt = conn.createStatement()){
+            stmt.execute(sql);
+            
+        } catch (Exception ex) {}
+    }
+    
     public void removeUser(String username) {
         String sql = "DELETE FROM users WHERE username='" + username + "';";
 

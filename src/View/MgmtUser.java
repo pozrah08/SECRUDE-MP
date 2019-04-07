@@ -222,6 +222,9 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void lockBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lockBtnActionPerformed
+        String selectedUser = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+        int lockedVal = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 3).toString());
+        
         if(table.getSelectedRow() >= 0){
             String state = "lock";
             if("1".equals(tableModel.getValueAt(table.getSelectedRow(), 3) + "")){
@@ -232,8 +235,34 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
+                System.out.println(selectedUser + " " + lockedVal);
                 
+                if(lockedVal == 1){
+                    lockedVal = 0;
+                }
+                else if (lockedVal == 0){
+                    lockedVal = 1;
+                }
+                    
+                System.out.println(selectedUser + " " + lockedVal);
+                
+                sqlite.toggleUserLock(selectedUser, lockedVal);
             }
+            
+                //      CLEAR TABLE
+               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                   tableModel.removeRow(0);
+               }
+
+                //      LOAD CONTENTS
+               ArrayList<User> users = sqlite.getUsers();
+               for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                   tableModel.addRow(new Object[]{
+                       users.get(nCtr).getUsername(), 
+                       users.get(nCtr).getPassword(), 
+                       users.get(nCtr).getRole(), 
+                       users.get(nCtr).getLocked()});
+               }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
