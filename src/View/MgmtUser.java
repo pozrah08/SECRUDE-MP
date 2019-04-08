@@ -520,7 +520,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 throw new RuntimeException(e); 
             }
             
-            System.out.println("CURRENT USER PASS: " + currentUserPass);
+            System.out.println("CURRENT USER'S PASS: " + currentUserPass);
             System.out.println("INPUT FOR OLD PASS FIELD: " + oldPassTemp);
             
             if(result == JOptionPane.OK_OPTION){ // clicks ok
@@ -558,13 +558,13 @@ public class MgmtUser extends javax.swing.JPanel {
                             sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
                             System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
                         } else { // new password and confirm password differ in input
-                            System.out.println("PASSWORDS DO NOT MATCH");
+                           JOptionPane.showMessageDialog(null, "Passwords do not match.");
                         }
                     } else { // password does not meet one or more requirements
-                        System.out.println("PASSWORD MUST HAVE ONE UPPERCASE CHARACTER, NUMBER, SYMBOL AND MUST BE 6-32 CHARACTERS LONG");
+                       JOptionPane.showMessageDialog(null, "Password must have an uppercase character, number, valid symbol and must be 6-50 characters long.");
                     }
                 } else { // password is not equal to current password
-                    System.out.println("OLD PASSWORD DOES NOT MATCH");
+                    JOptionPane.showMessageDialog(null, "Old password does not match.");
                 }
             }
             
