@@ -33,10 +33,10 @@ public class StaffHome extends javax.swing.JPanel {
     }
     
     public void init(SQLite sqlite){
-        mgmtHistory = new MgmtHistory(sqlite);
-        mgmtLogs = new MgmtLogs(sqlite);
-        mgmtProduct = new MgmtProduct(sqlite);
-        mgmtUser = new MgmtUser(sqlite);
+        mgmtHistory = new MgmtHistory(sqlite, "staff");
+        mgmtLogs = new MgmtLogs(sqlite, "staff");
+        mgmtProduct = new MgmtProduct(sqlite, "staff");
+        mgmtUser = new MgmtUser(sqlite, "staff");
     
         Content.setLayout(contentView);
         Content.add(new Home("WELCOME STAFF!", new java.awt.Color(0,204,102)), "home");

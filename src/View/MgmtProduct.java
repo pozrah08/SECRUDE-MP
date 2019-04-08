@@ -22,17 +22,32 @@ public class MgmtProduct extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     
-    public MgmtProduct(SQLite sqlite) {
+    public MgmtProduct(SQLite sqlite, String role) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
 
-//        UNCOMMENT TO DISABLE BUTTONS
-//        purchaseBtn.setVisible(false);
-//        addBtn.setVisible(false);
-//        editBtn.setVisible(false);
-//        deleteBtn.setVisible(false);
+//        UNCOMMENT TO DISABLE BUTTONS 
+        switch(role){
+            case "client":
+                addBtn.setVisible(false);
+                editBtn.setVisible(false);
+                deleteBtn.setVisible(false);
+                break;
+                
+            case "staff":
+            case "manager":
+            case "admin":
+                break;
+                
+            default:
+                purchaseBtn.setVisible(false);
+                addBtn.setVisible(false);
+                editBtn.setVisible(false);
+                deleteBtn.setVisible(false);
+                break;
+        }
     }
 
     public void init(){

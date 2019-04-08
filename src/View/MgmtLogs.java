@@ -19,15 +19,29 @@ public class MgmtLogs extends javax.swing.JPanel {
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     
-    public MgmtLogs(SQLite sqlite) {
+    public MgmtLogs(SQLite sqlite, String role) {
         initComponents();
         this.sqlite = sqlite;
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
         
 //        UNCOMMENT TO DISABLE BUTTONS
-//        clearBtn.setVisible(false);
-//        debugBtn.setVisible(false);
+        switch(role){
+            case "client":
+            case "staff":
+            case "manager":
+                clearBtn.setVisible(false);
+                debugBtn.setVisible(false);
+                break;
+                
+            case "admin":
+                break;
+                
+            default:
+                clearBtn.setVisible(false);
+                debugBtn.setVisible(false);
+                break;
+        }
     }
 
     public void init(){
