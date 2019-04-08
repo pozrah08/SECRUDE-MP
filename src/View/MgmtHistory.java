@@ -42,6 +42,8 @@ public class MgmtHistory extends javax.swing.JPanel {
 //        UNCOMMENT TO DISABLE BUTTONS
         switch(role){
             case "client":
+                table.removeColumn(table.getColumnModel().getColumn(0));
+                break;
             case "staff":
             case "manager":
                 searchBtn.setVisible(false);
