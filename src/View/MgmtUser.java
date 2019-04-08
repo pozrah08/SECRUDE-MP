@@ -30,6 +30,7 @@ public class MgmtUser extends javax.swing.JPanel {
         initComponents();
         this.sqlite = sqlite;
         currentUserRole = role;
+        
         tableModel = (DefaultTableModel)table.getModel();
         table.getTableHeader().setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 14));
         
@@ -62,14 +63,52 @@ public class MgmtUser extends javax.swing.JPanel {
             tableModel.removeRow(0);
         }
         
-//      LOAD CONTENTS
+        //      LOAD CONTENTS
         ArrayList<User> users = sqlite.getUsers();
-        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+        ArrayList<User> filteredUsers = new ArrayList<User>();
+        //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+        switch(currentUserRole){
+            case "client":
+                break;
+                
+            case "staff":
+                for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                    if(users.get(nCtr).getRole() == 1 || 
+                       users.get(nCtr).getRole() == 2){
+                        filteredUsers.add(users.get(nCtr));
+                    }
+                }
+                break;
+            case "manager":
+                for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                    if(users.get(nCtr).getRole() == 1 || 
+                       users.get(nCtr).getRole() == 2 || 
+                       users.get(nCtr).getRole() == 3){
+                        filteredUsers.add(users.get(nCtr));
+                    }
+                }
+                break;
+            case "admin":
+                for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                    if(users.get(nCtr).getRole() == 1 || 
+                       users.get(nCtr).getRole() == 2 || 
+                       users.get(nCtr).getRole() == 3 || 
+                       users.get(nCtr).getRole() == 4 ||
+                       users.get(nCtr).getRole() == 5){
+                        filteredUsers.add(users.get(nCtr));
+                    }
+                }
+                break;
+                
+            default:
+                break;
+        }
+        for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
             tableModel.addRow(new Object[]{
-                users.get(nCtr).getUsername(), 
-                users.get(nCtr).getPassword(), 
-                users.get(nCtr).getRole(), 
-                users.get(nCtr).getLocked()});
+                filteredUsers.get(nCtr).getUsername(), 
+                filteredUsers.get(nCtr).getPassword(), 
+                filteredUsers.get(nCtr).getRole(), 
+                filteredUsers.get(nCtr).getLocked()});
         }
     }
 
@@ -199,14 +238,41 @@ public class MgmtUser extends javax.swing.JPanel {
     private void editRoleBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoleBtnActionPerformed
          if(table.getSelectedRow() >= 0){
             String selectedUser = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
+            ArrayList<String> options = new ArrayList<String>();
             
-            String[] options = {"1-DISABLED","2-CLIENT","3-STAFF","4-MANAGER","5-ADMIN"};
-            JComboBox optionList = new JComboBox(options);
+            switch(currentUserRole){
+            case "client":
+                break;
+                
+            case "staff":
+                options.add("1-DISABLED");
+                options.add("2-CLIENT");
+                break;
+                
+            case "manager":
+                options.add("1-DISABLED");
+                options.add("2-CLIENT");
+                options.add("3-STAFF");
+                break;
+                
+            case "admin":
+                options.add("1-DISABLED");
+                options.add("2-CLIENT");
+                options.add("3-STAFF");
+                options.add("4-MANAGER");
+                options.add("5-ADMIN");
+                break;
+                
+            default:
+                break;
+            }
+            
+            JComboBox optionList = new JComboBox(options.toArray());
             
             optionList.setSelectedIndex((int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1);
             
             String result = (String) JOptionPane.showInputDialog(null, "USER: " + tableModel.getValueAt(table.getSelectedRow(), 0), 
-                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options, options[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
+                "EDIT USER ROLE", JOptionPane.QUESTION_MESSAGE, null, options.toArray(), options.toArray()[(int)tableModel.getValueAt(table.getSelectedRow(), 2) - 1]);
             
             if(result != null){
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
@@ -216,19 +282,57 @@ public class MgmtUser extends javax.swing.JPanel {
             }
             
              //      CLEAR TABLE
-               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                   tableModel.removeRow(0);
-               }
+            for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                tableModel.removeRow(0);
+            }
+        
+            //      LOAD CONTENTS
+            ArrayList<User> users = sqlite.getUsers();
+            ArrayList<User> filteredUsers = new ArrayList<User>();
+            //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+            switch(currentUserRole){
+                case "client":
+                    break;
 
-                //      LOAD CONTENTS
-               ArrayList<User> users = sqlite.getUsers();
-               for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                   tableModel.addRow(new Object[]{
-                       users.get(nCtr).getUsername(), 
-                       users.get(nCtr).getPassword(), 
-                       users.get(nCtr).getRole(), 
-                       users.get(nCtr).getLocked()});
-               }
+                case "staff":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+                case "manager":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+                case "admin":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 || 
+                           users.get(nCtr).getRole() == 4 ||
+                           users.get(nCtr).getRole() == 5){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
+                tableModel.addRow(new Object[]{
+                    filteredUsers.get(nCtr).getUsername(), 
+                    filteredUsers.get(nCtr).getPassword(), 
+                    filteredUsers.get(nCtr).getRole(), 
+                    filteredUsers.get(nCtr).getLocked()});
+            }
         }
     }//GEN-LAST:event_editRoleBtnActionPerformed
 
@@ -241,19 +345,57 @@ public class MgmtUser extends javax.swing.JPanel {
                 sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
                 
                 //      CLEAR TABLE
-               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                   tableModel.removeRow(0);
-               }
+                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                    tableModel.removeRow(0);
+                }
 
                 //      LOAD CONTENTS
-               ArrayList<User> users = sqlite.getUsers();
-               for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                   tableModel.addRow(new Object[]{
-                       users.get(nCtr).getUsername(), 
-                       users.get(nCtr).getPassword(), 
-                       users.get(nCtr).getRole(), 
-                       users.get(nCtr).getLocked()});
-               }
+                ArrayList<User> users = sqlite.getUsers();
+                ArrayList<User> filteredUsers = new ArrayList<User>();
+                //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+                switch(currentUserRole){
+                    case "client":
+                        break;
+
+                    case "staff":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "manager":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "admin":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3 || 
+                               users.get(nCtr).getRole() == 4 ||
+                               users.get(nCtr).getRole() == 5){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
+                    tableModel.addRow(new Object[]{
+                        filteredUsers.get(nCtr).getUsername(), 
+                        filteredUsers.get(nCtr).getPassword(), 
+                        filteredUsers.get(nCtr).getRole(), 
+                        filteredUsers.get(nCtr).getLocked()});
+                }
             }
         }
     }//GEN-LAST:event_deleteBtnActionPerformed
@@ -287,19 +429,57 @@ public class MgmtUser extends javax.swing.JPanel {
             }
             
                 //      CLEAR TABLE
-               for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                   tableModel.removeRow(0);
-               }
+            for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                tableModel.removeRow(0);
+            }
+        
+            //      LOAD CONTENTS
+            ArrayList<User> users = sqlite.getUsers();
+            ArrayList<User> filteredUsers = new ArrayList<User>();
+            //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+            switch(currentUserRole){
+                case "client":
+                    break;
 
-                //      LOAD CONTENTS
-               ArrayList<User> users = sqlite.getUsers();
-               for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                   tableModel.addRow(new Object[]{
-                       users.get(nCtr).getUsername(), 
-                       users.get(nCtr).getPassword(), 
-                       users.get(nCtr).getRole(), 
-                       users.get(nCtr).getLocked()});
-               }
+                case "staff":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+                case "manager":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+                case "admin":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 || 
+                           users.get(nCtr).getRole() == 4 ||
+                           users.get(nCtr).getRole() == 5){
+                            filteredUsers.add(users.get(nCtr));
+                        }
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+            for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
+                tableModel.addRow(new Object[]{
+                    filteredUsers.get(nCtr).getUsername(), 
+                    filteredUsers.get(nCtr).getPassword(), 
+                    filteredUsers.get(nCtr).getRole(), 
+                    filteredUsers.get(nCtr).getLocked()});
+            }
         }
     }//GEN-LAST:event_lockBtnActionPerformed
 
@@ -323,6 +503,59 @@ public class MgmtUser extends javax.swing.JPanel {
                 if(password.getText().equals(confpass.getText())){
                     sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
                     System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + "changed passwords to " + password.getText());
+                }
+                
+                //      CLEAR TABLE
+                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                    tableModel.removeRow(0);
+                }
+
+                //      LOAD CONTENTS
+                ArrayList<User> users = sqlite.getUsers();
+                ArrayList<User> filteredUsers = new ArrayList<User>();
+                //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+                switch(currentUserRole){
+                    case "client":
+                        break;
+
+                    case "staff":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "manager":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "admin":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3 || 
+                               users.get(nCtr).getRole() == 4 ||
+                               users.get(nCtr).getRole() == 5){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
+                    tableModel.addRow(new Object[]{
+                        filteredUsers.get(nCtr).getUsername(), 
+                        filteredUsers.get(nCtr).getPassword(), 
+                        filteredUsers.get(nCtr).getRole(), 
+                        filteredUsers.get(nCtr).getLocked()});
                 }
             }
         }
