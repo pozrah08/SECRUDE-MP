@@ -114,7 +114,7 @@ public class Register extends javax.swing.JPanel {
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
-        boolean foundUser, hasUppercase, hasNum, hasSymbol, passIs6, uNameIs6, passMatch, hasSpecialChar;
+        boolean foundUser, hasUppercase, hasNum, hasSymbol, passIs6, uNameIs6, passMatch, usernameSpecialChar;
         ArrayList <User> userList;
         
         //retrieving data and inputs
@@ -131,7 +131,7 @@ public class Register extends javax.swing.JPanel {
         passIs6 = true;
         uNameIs6 = true;
         passMatch = true;
-        hasSpecialChar = false;
+        usernameSpecialChar = false;
         
         //clearing the error messages
 //        userErrorMsg.setVisible(false);
@@ -145,7 +145,7 @@ public class Register extends javax.swing.JPanel {
         char[] usernameArray = username.toCharArray();
          for(int i = 0; i < usernameArray.length; i++){
             if(!(Character.isDigit(usernameArray[i])) && !(Character.isLetter(usernameArray[i]))){  //special characters
-                hasSpecialChar = true;
+                usernameSpecialChar = true;
 //                usernameLbl.setForeground(Color.red);
             }
         }
@@ -197,7 +197,7 @@ public class Register extends javax.swing.JPanel {
 //            passwordErrorMsg.setVisible(true);
         }
         
-        if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6 && !hasSpecialChar){
+        if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6 && hasSymbol && !usernameSpecialChar){
             frame.registerAction(username, password1);
             System.out.println("===REGISTER SUCCESSFUL===");
             System.out.println("Username: " + username);

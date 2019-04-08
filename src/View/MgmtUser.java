@@ -7,6 +7,9 @@ package View;
 
 import Controller.SQLite;
 import Model.User;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -485,26 +488,86 @@ public class MgmtUser extends javax.swing.JPanel {
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
         if(currentUserRole.equals("client")){
-            JTextField password = new JPasswordField();
+            JTextField oldPassword = new JPasswordField();
+            JTextField newPassword = new JPasswordField();
             JTextField confpass = new JPasswordField();
-            designer(password, "PASSWORD");
+            designer(oldPassword, "OLD PASSWORD");
+            designer(newPassword, "NEW PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
             
             Object[] message = {
-                "Enter New Password:", password, confpass
+                "Enter New Password:", oldPassword, newPassword, confpass
             };
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
-            if(result == JOptionPane.OK_OPTION){
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
-                
-                if(password.getText().equals(confpass.getText())){
-                    sqlite.changePassword(Frame.getUser().getUsername(), password.getText());
-                    System.out.println(Frame.getUser().getUsername() + " changed their password to " + password.getText());
+            String currentUserPass = Frame.getUser().getPassword();
+            String oldPassTemp = oldPassword.getText();
+            
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+
+                byte[] messageDigest = md.digest(oldPassTemp.getBytes()); 
+
+                BigInteger no = new BigInteger(1, messageDigest); 
+
+                oldPassTemp = no.toString(16); 
+
+                while (oldPassTemp.length() < 32) { 
+                    oldPassTemp = "0" + oldPassTemp; 
+                } 
+            } catch (NoSuchAlgorithmException e) { 
+                throw new RuntimeException(e); 
+            }
+            
+            System.out.println("CURRENT USER PASS: " + currentUserPass);
+            System.out.println("INPUT FOR OLD PASS FIELD: " + oldPassTemp);
+            
+            if(result == JOptionPane.OK_OPTION){ // clicks ok
+                if(currentUserPass.equals(oldPassTemp)){ // check if they put the correct current password
+                    System.out.println(newPassword.getText());
+                    System.out.println(confpass.getText());
+                    
+                    boolean hasUppercase = false;
+                    boolean hasNum = false;
+                    boolean hasSymbol = false;
+                    boolean passIs6 = true;
+                    
+                    if(newPassword.getText().matches("(.*)[-+_!@#$%^&*.,?](.*)")){ //check if the password has a symbol
+                        hasSymbol = true;
+                    }
+                    
+                    if(oldPassword.toString().length() < 6 && oldPassword.toString().length() > 50){ // check valid password length
+                        passIs6 = false;
+                    }
+                    
+                    char[] passwordArray = newPassword.getText().toCharArray();
+                    
+                    for(int i = 0; i < passwordArray.length; i++){
+                        if(Character.isUpperCase(passwordArray[i])){ //check if the password has an uppercase character
+                            hasUppercase = true;
+                        }
+
+                        if(Character.isDigit(passwordArray[i])){ // check if the password has a number
+                            hasNum = true;
+                        }
+                    }
+                    
+                    if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
+                        if(newPassword.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
+                            sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
+                            System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
+                        } else { // new password and confirm password differ in input
+                            System.out.println("PASSWORDS DO NOT MATCH");
+                        }
+                    } else { // password does not meet one or more requirements
+                        System.out.println("PASSWORD MUST HAVE ONE UPPERCASE CHARACTER, NUMBER, SYMBOL AND MUST BE 6-32 CHARACTERS LONG");
+                    }
+                } else { // password is not equal to current password
+                    System.out.println("OLD PASSWORD DOES NOT MATCH");
                 }
             }
+            
         }else if(table.getSelectedRow() >= 0){
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();

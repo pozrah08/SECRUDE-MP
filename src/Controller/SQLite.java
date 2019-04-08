@@ -4,6 +4,7 @@ import Model.History;
 import Model.Logs;
 import Model.Product;
 import Model.User;
+import View.Security;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -163,7 +164,7 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, name);
+                pstmt.setString(1, Security.cleanString(name));
                 pstmt.setInt(2, stock);
                 pstmt.setDouble(3, price);
                 pstmt.executeUpdate();
@@ -194,8 +195,8 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, username);
-                pstmt.setString(2, password);
+                pstmt.setString(1, Security.cleanString(username));
+                pstmt.setString(2, Security.cleanString(password));
                 pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
@@ -278,6 +279,27 @@ public class SQLite {
         return users;
     }
     
+    public ArrayList<User> getUser(String username){
+        String sql = "SELECT id, username, password, role, locked FROM users WHERE username = ? ;";
+        ArrayList<User> users = new ArrayList<User>();
+        
+        try (Connection conn = DriverManager.getConnection(driverURL);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            
+            pstmt.setString(1, Security.cleanString(username));
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                users.add(new User(rs.getInt("id"),
+                                   rs.getString("username"),
+                                   rs.getString("password"),
+                                   rs.getInt("role"),
+                                   rs.getInt("locked")));
+            }
+        } catch (Exception ex) {}
+        return users;
+    }
+    
     public void addUser(String username, String password, int role) {
          // hash the password
         try { 
@@ -297,21 +319,26 @@ public class SQLite {
             throw new RuntimeException(e); 
         }
         
-        String sql = "INSERT INTO users(username,password,role) VALUES('" + username + "','" + password + "','" + role + "')";
+        String sql = "INSERT INTO users(username,password,role) VALUES(?, ?, ?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, Security.cleanString(username));
+            pstmt.setString(2, Security.cleanString(password));
+            pstmt.setInt(3, role);
+            pstmt.executeUpdate();
             
         } catch (Exception ex) {}
     }
     
     public void toggleUserLock(String username, int lock){
-        String sql = "UPDATE users SET locked = " + lock + " WHERE username = '" + username + "';";
+        String sql = "UPDATE users SET locked = ? WHERE username = ? ;";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setInt(1, lock);
+            pstmt.setString(2, username);
+            pstmt.executeQuery();
             
         } catch (Exception ex) {}
     }
@@ -343,7 +370,7 @@ public class SQLite {
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, name);
+            pstmt.setString(1, Security.cleanString(name));
             ResultSet rs = pstmt.executeQuery();
                 product = new Product(rs.getString("name"),
                                        rs.getInt("stock"),
@@ -357,7 +384,7 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, newName);
+            pstmt.setString(1, Security.cleanString(newName));
             pstmt.setInt(2, newStock);
             pstmt.setDouble(3, newPrice);
             pstmt.setString(4, oldName);
@@ -387,7 +414,7 @@ public class SQLite {
              
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, password);
+            pstmt.setString(1, Security.cleanString(password));
             pstmt.setString(2, username);
             pstmt.executeUpdate();
         } catch (Exception ex) {}
