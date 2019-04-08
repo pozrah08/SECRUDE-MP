@@ -8,6 +8,7 @@ package View;
 import Controller.SQLite;
 import Model.History;
 import Model.Product;
+import Model.User;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -18,9 +19,10 @@ import javax.swing.table.DefaultTableModel;
  * @author beepxD
  */
 public class MgmtHistory extends javax.swing.JPanel {
-
+    
     public SQLite sqlite;
     public DefaultTableModel tableModel;
+    public String currentUserRole;
     
     public MgmtHistory(SQLite sqlite, String role) {
         initComponents();
@@ -33,6 +35,9 @@ public class MgmtHistory extends javax.swing.JPanel {
         table.getColumnModel().getColumn(3).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(4).setCellRenderer(rightAlign);
         table.getColumnModel().getColumn(5).setCellRenderer(rightAlign);
+        
+        
+        currentUserRole = role;
         
 //        UNCOMMENT TO DISABLE BUTTONS
         switch(role){
@@ -61,15 +66,27 @@ public class MgmtHistory extends javax.swing.JPanel {
         
 //      LOAD CONTENTS
         ArrayList<History> history = sqlite.getHistory();
-        for(int nCtr = 0; nCtr < history.size(); nCtr++){
-            Product product = sqlite.getProduct(history.get(nCtr).getName());
+        ArrayList<History> filteredHistory = new ArrayList<History>();
+        
+        if(currentUserRole.equals("client")){
+            for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                        if(history.get(nCtr).getUsername().equals(Frame.getUser().getUsername())){
+                            filteredHistory.add(history.get(nCtr));
+                        }
+                    }
+        } else{
+            filteredHistory = history;
+        }
+        
+        for(int nCtr = 0; nCtr < filteredHistory.size(); nCtr++){
+            Product product = sqlite.getProduct(filteredHistory.get(nCtr).getName());
             tableModel.addRow(new Object[]{
-                history.get(nCtr).getUsername(), 
-                history.get(nCtr).getName(), 
-                history.get(nCtr).getStock(), 
+                filteredHistory.get(nCtr).getUsername(), 
+                filteredHistory.get(nCtr).getName(), 
+                filteredHistory.get(nCtr).getStock(), 
                 product.getPrice(), 
-                product.getPrice() * history.get(nCtr).getStock(), 
-                history.get(nCtr).getTimestamp()
+                product.getPrice() * filteredHistory.get(nCtr).getStock(), 
+                filteredHistory.get(nCtr).getTimestamp()
             });
         }
     }
@@ -187,14 +204,17 @@ public class MgmtHistory extends javax.swing.JPanel {
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
             }
-
+            
+            
 //          LOAD CONTENTS
             ArrayList<History> history = sqlite.getHistory();
+            ArrayList<User> users = sqlite.getUsers();
             for(int nCtr = 0; nCtr < history.size(); nCtr++){
                 if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
                    history.get(nCtr).getUsername().contains(searchFld.getText()) || 
                    searchFld.getText().contains(history.get(nCtr).getName()) || 
                    history.get(nCtr).getName().contains(searchFld.getText())){
+                    
                 
                     Product product = sqlite.getProduct(history.get(nCtr).getName());
                     tableModel.addRow(new Object[]{

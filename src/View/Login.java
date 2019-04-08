@@ -173,6 +173,7 @@ public class Login extends javax.swing.JPanel {
                 if(locked == 0){
                     //not locked
                     frame.mainNav(role);
+                    frame.setUser(user);
             
                     System.out.println("===Login Successful=== ");
                     System.out.println("Username: " + username);

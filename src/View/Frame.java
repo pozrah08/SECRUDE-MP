@@ -1,13 +1,15 @@
 package View;
 
 import Controller.Main;
+import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
-
+    private static User currentUser;
+    
     public Frame() {
         initComponents();
     }
@@ -278,6 +280,14 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password){
         main.sqlite.addUser(username, password);
+    }
+    
+    public void setUser(User user){
+        currentUser = user;
+    }
+    
+    public static User getUser(){
+        return currentUser;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
