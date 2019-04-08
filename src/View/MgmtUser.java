@@ -40,7 +40,6 @@ public class MgmtUser extends javax.swing.JPanel {
                 editRoleBtn.setVisible(false);
                 deleteBtn.setVisible(false);
                 lockBtn.setVisible(false);
-                chgpassBtn.setVisible(false);
                 break;
                 
             case "staff":
@@ -484,7 +483,28 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_lockBtnActionPerformed
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
-        if(table.getSelectedRow() >= 0){
+        if(currentUserRole.equals("client")){
+            JTextField password = new JPasswordField();
+            JTextField confpass = new JPasswordField();
+            designer(password, "PASSWORD");
+            designer(confpass, "CONFIRM PASSWORD");
+            
+            Object[] message = {
+                "Enter New Password:", password, confpass
+            };
+
+            int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+            
+            if(result == JOptionPane.OK_OPTION){
+                System.out.println(password.getText());
+                System.out.println(confpass.getText());
+                
+                if(password.getText().equals(confpass.getText())){
+                    sqlite.changePassword(Frame.getUser().getUsername(), password.getText());
+                    System.out.println(Frame.getUser().getUsername() + " changed their password to " + password.getText());
+                }
+            }
+        }else if(table.getSelectedRow() >= 0){
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();
             designer(password, "PASSWORD");
@@ -502,7 +522,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 
                 if(password.getText().equals(confpass.getText())){
                     sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
-                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + "changed passwords to " + password.getText());
+                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " changed their password to " + password.getText());
                 }
                 
                 //      CLEAR TABLE

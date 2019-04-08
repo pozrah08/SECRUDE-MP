@@ -37,9 +37,11 @@ public class MgmtProduct extends javax.swing.JPanel {
                 deleteBtn.setVisible(false);
                 break;
                 
-            case "staff":
-            case "manager":
-            case "admin":
+            case "staff": purchaseBtn.setVisible(false);
+                break;
+            case "manager": purchaseBtn.setVisible(false);
+                break;
+            case "admin": purchaseBtn.setVisible(false);
                 break;
                 
             default:
