@@ -114,19 +114,20 @@ public class Register extends javax.swing.JPanel {
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         String password1, password2, username;
-        boolean foundUser, hasUppercase, hasNum, passIs6, uNameIs6, passMatch, hasSpecialChar;
+        boolean foundUser, hasUppercase, hasNum, hasSymbol, passIs6, uNameIs6, passMatch, hasSpecialChar;
         ArrayList <User> userList;
         
         //retrieving data and inputs
-        username = usernameFld.getText();
-        password1 = passwordFld.getText().trim();
-        password2 = confirmPassFld.getText().trim();
+        username = Security.cleanString(usernameFld.getText());
+        password1 = Security.cleanString(passwordFld.getText().trim());
+        password2 = Security.cleanString(confirmPassFld.getText().trim());
         userList = frame.main.sqlite.getUsers();
         
         //initalizing booleans
         foundUser = false;
         hasUppercase = false;
         hasNum = false;
+        hasSymbol = false; //for password
         passIs6 = true;
         uNameIs6 = true;
         passMatch = true;
@@ -175,21 +176,26 @@ public class Register extends javax.swing.JPanel {
             if(Character.isDigit(passwordArray[i])){ // check if the password has a number
                 hasNum = true;
             }
+            
+            if(password1.matches("(.*)[-+_!@#$%^&*.,?](.*)")){ //check if the password has a symbol
+                hasSymbol = true;
+            }
         }
         
 //        if(!hasUppercase || !hasNum){
 //            passwordLbl.setForeground(Color.red);
 //        }
 //        
-//        if(username.length() < 6){
-//            uNameIs6 = false;
+//        ENFORCE MAX LENGTH OF USERNAME AND PASSWORD
+        if(username.length() < 6 && username.length() > 50){
+            uNameIs6 = false;
 //            userErrorMsg1.setVisible(true);
-//        }
-//        
-//        if(password1.length() < 6){
-//            passIs6 = false;
+        }
+        
+        if(password1.length() < 6 && password1.length() > 50){
+            passIs6 = false;
 //            passwordErrorMsg.setVisible(true);
-//        }
+        }
         
         if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6 && !hasSpecialChar){
             frame.registerAction(username, password1);
