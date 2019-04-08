@@ -2,14 +2,28 @@
 package View;
 
 import Model.User;
+import View.Security;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login extends javax.swing.JPanel {
 
     public Frame frame;
+    private int attempts = 0;
+    private int maxAttempts = 2;  //TODO: Change as needed
     
     public Login() {
         initComponents();
@@ -136,8 +150,9 @@ public class Login extends javax.swing.JPanel {
         User user = new User("username", "password");
         ArrayList<User> users = frame.main.sqlite.getUsers();
         
-        username = usernameFld.getText();
-        password = hashString(passwordFld.getText());
+        // clean input from textField  
+        username = Security.cleanString(usernameFld.getText());
+        password = Security.cleanString(hashString(passwordFld.getText()));
         
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             if(users.get(nCtr).getUsername().equalsIgnoreCase(username)){
@@ -154,7 +169,9 @@ public class Login extends javax.swing.JPanel {
             int locked = user.getLocked();
             
             if(role != 1){
+                //not disabled
                 if(locked == 0){
+                    //not locked
                     frame.mainNav(role);
             
                     System.out.println("===Login Successful=== ");
@@ -168,16 +185,49 @@ public class Login extends javax.swing.JPanel {
                     //clear error msg
                     errorMsg.setVisible(false);
                 }else{
+                    //locked account
                     System.out.println("ACCOUNT IS LOCKED. CONTACT AN ADMIN TO UNLOCK YOUR ACCOUNT");
                 }
             }else {
+                //disabled account
                 System.out.println("ACCOUNT IS DISABLED. CANNOT LOG IN");
             }
             
-        }else{
+        }else if(attempts < maxAttempts){
+            //account not found but attempts still remain
             System.out.println("Invalid Credentials!");
             errorMsg.setVisible(true);
+            attempts++; //add to number of invalid attempts
             //ALERT
+            
+        } else{
+            //Max attempts(per session) reached: LOCKOUT
+            System.out.println("===Locked Out=== ");
+            errorMsg.setText("You have been locked out.");
+            //update log
+            //get today's date
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();            
+            //get preferred outbound ip
+            String ip = "";
+            try(final DatagramSocket socket = new DatagramSocket()){
+                socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                ip = socket.getLocalAddress().getHostAddress();
+            } catch (SocketException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            try {
+                // [LOCKOUT] date username password ip
+                Security.updateLog("[LOCKOUT] " + dateFormat.format(date) + " " + 
+                                    usernameFld.getText() + " " + passwordFld.getText() + " " +
+                                    ip);
+            } catch (IOException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            errorMsg.setVisible(true);
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
