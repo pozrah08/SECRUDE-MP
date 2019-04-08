@@ -7,7 +7,9 @@ package View;
 
 import Controller.SQLite;
 import Model.Product;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,7 +20,6 @@ import javax.swing.table.DefaultTableModel;
  * @author beepxD
  */
 public class MgmtProduct extends javax.swing.JPanel {
-
     public SQLite sqlite;
     public DefaultTableModel tableModel;
     
@@ -206,6 +207,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 if( stock > 0 && stock >= toBuy){
                     String product = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
                     
+                    sqlite.addHistory(Frame.getUser().getUsername(), product, toBuy, new Timestamp(new Date().getTime()).toString());
                     sqlite.updateProduct(product, product, stock - toBuy, Double.parseDouble(tableModel.getValueAt(table.getSelectedRow(), 2).toString()));
                     
                     //      CLEAR TABLE
@@ -221,6 +223,8 @@ public class MgmtProduct extends javax.swing.JPanel {
                             products.get(nCtr).getStock(), 
                             products.get(nCtr).getPrice()});
                     }
+                    
+                    
                 }else{
                     System.out.println("NOT ENOUGH ON STOCK.");
                 }
