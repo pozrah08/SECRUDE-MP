@@ -40,6 +40,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 editRoleBtn.setVisible(false);
                 deleteBtn.setVisible(false);
                 lockBtn.setVisible(false);
+                table.getTableHeader().setVisible(false);
                 break;
                 
             case "staff":
