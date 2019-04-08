@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -132,29 +133,40 @@ public class SQLite {
     }
     
     public void addHistory(String username, String name, int stock, String timestamp) {
-        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES('" + username + "','" + name + "','" + stock + "','" + timestamp + "')";
+        String sql = "INSERT INTO history(username,name,stock,timestamp) VALUES(?,?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, name);
+                pstmt.setInt(3, stock);
+                pstmt.setString(4, timestamp);
+                pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
     public void addLogs(String event, String username, String desc, String timestamp) {
-        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES('" + event + "','" + username + "','" + desc + "','" + timestamp + "')";
+        String sql = "INSERT INTO logs(event,username,desc,timestamp) VALUES(?,?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, event);
+                pstmt.setString(2, username);
+                pstmt.setString(3, desc);
+                pstmt.setString(4, timestamp);
+                pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
     public void addProduct(String name, int stock, double price) {
-        String sql = "INSERT INTO product(name,stock,price) VALUES('" + name + "','" + stock + "','" + price + "')";
+        String sql = "INSERT INTO product(name,stock,price) VALUES(?,?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, name);
+                pstmt.setInt(2, stock);
+                pstmt.setDouble(3, price);
+                pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
@@ -177,18 +189,14 @@ public class SQLite {
             throw new RuntimeException(e); 
         }
         
-         String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+//         String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
+        String sql = "INSERT INTO users(username,password) VALUES(?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
-            
-//      PREPARED STATEMENT EXAMPLE
-//      String sql = "INSERT INTO users(username,password) VALUES(?,?)";
-//      PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//      pstmt.setString(1, username);
-//      pstmt.setString(2, password);
-//      pstmt.executeUpdate();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, password);
+                pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
@@ -309,44 +317,51 @@ public class SQLite {
     }
     
     public void removeUser(String username) {
-        String sql = "DELETE FROM users WHERE username='" + username + "';";
+        String sql = "DELETE FROM users WHERE username=? ;";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
             System.out.println("User " + username + " has been deleted.");
         } catch (Exception ex) {}
     }
     
     public void removeProduct(String name) {
-        String sql = "DELETE FROM product WHERE name='" + name + "';";
+        String sql = "DELETE FROM product WHERE name=? ;";
 
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()) {
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, name);
+                pstmt.executeUpdate();
             System.out.println("The product " + name + " has been deleted.");
         } catch (Exception ex) {}
     }
     
     public Product getProduct(String name){
-        String sql = "SELECT name, stock, price FROM product WHERE name='" + name + "';";
+        String sql = "SELECT name, stock, price FROM product WHERE name=? ;";
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
-            product = new Product(rs.getString("name"),
-                                   rs.getInt("stock"),
-                                   rs.getFloat("price"));
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+                product = new Product(rs.getString("name"),
+                                       rs.getInt("stock"),
+                                       rs.getFloat("price"));
         } catch (Exception ex) {}
         return product;
     }
     
     public void updateProduct(String oldName, String newName, int newStock, double newPrice){
-        String sql = "UPDATE product SET name='" + newName + "', stock='" +  newStock + "', price='" + newPrice + "' WHERE name='" + oldName + "';";
+        String sql = "UPDATE product SET name=?, stock=?, price=? WHERE name=? ;";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, newName);
+            pstmt.setInt(2, newStock);
+            pstmt.setDouble(3, newPrice);
+            pstmt.setString(4, oldName);
+            pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
@@ -368,20 +383,24 @@ public class SQLite {
             throw new RuntimeException(e); 
         }
                
-        String sql = "UPDATE users SET password='" + password + "' WHERE username='" + username + "';";
+        String sql = "UPDATE users SET password=? WHERE username=? ;";
              
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, password);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
     
     public void editUserRole(String username, int role){
-        String sql = "UPDATE users SET role = " + role + " WHERE username = '" + username + "';";
+        String sql = "UPDATE users SET role = ? WHERE username = ? ;";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
-            Statement stmt = conn.createStatement()){
-            stmt.execute(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setInt(1, role);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
             
         } catch (Exception ex) {}
     }
