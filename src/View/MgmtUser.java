@@ -487,7 +487,7 @@ public class MgmtUser extends javax.swing.JPanel {
     }//GEN-LAST:event_lockBtnActionPerformed
 
     private void chgpassBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chgpassBtnActionPerformed
-        if(currentUserRole.equals("client")){
+        if(!currentUserRole.equals("admin")){
             JTextField oldPassword = new JPasswordField();
             JTextField newPassword = new JPasswordField();
             JTextField confpass = new JPasswordField();
@@ -568,7 +568,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 }
             }
             
-        }else if(table.getSelectedRow() >= 0){
+        }else if(table.getSelectedRow() >=0 && currentUserRole.equals("admin")){
             JTextField password = new JPasswordField();
             JTextField confpass = new JPasswordField();
             designer(password, "PASSWORD");
