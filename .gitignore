@@ -1,1 +1,5 @@
 /dist/
+nbproject/genfiles.properties
+*.xml
+*.properties
+nbproject/build-impl.xml

@@ -54,6 +54,10 @@ public class StaffHome extends javax.swing.JPanel {
     
     public void showPnl(String panelName){
         contentView.show(Content, panelName);
+        usersBtn.setForeground(Color.black);
+        productsBtn.setForeground(Color.black);
+        historyBtn.setForeground(Color.black);
+        logsBtn.setForeground(Color.black);
     }
 
     /**

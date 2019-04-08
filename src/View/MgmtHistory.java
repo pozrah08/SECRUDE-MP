@@ -43,6 +43,7 @@ public class MgmtHistory extends javax.swing.JPanel {
         switch(role){
             case "client":
                 table.removeColumn(table.getColumnModel().getColumn(0));
+                searchBtn.setText("SEARCH PRODUCT");
                 break;
             case "staff":
             case "manager":
@@ -202,33 +203,58 @@ public class MgmtHistory extends javax.swing.JPanel {
         int result = JOptionPane.showConfirmDialog(null, message, "SEARCH HISTORY", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
 
         if (result == JOptionPane.OK_OPTION) {
-//          CLEAR TABLE
+            ArrayList<History> history = sqlite.getHistory();
+            
+            //          CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
             }
             
             
-//          LOAD CONTENTS
-            ArrayList<History> history = sqlite.getHistory();
-            ArrayList<User> users = sqlite.getUsers();
-            for(int nCtr = 0; nCtr < history.size(); nCtr++){
-                if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
-                   history.get(nCtr).getUsername().contains(searchFld.getText()) || 
-                   searchFld.getText().contains(history.get(nCtr).getName()) || 
-                   history.get(nCtr).getName().contains(searchFld.getText())){
-                    
+            if(currentUserRole.equals("client")){
+                for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                    if(searchFld.getText().contains(history.get(nCtr).getName()) &&
+                        history.get(nCtr).getUsername().equals(Frame.getUser().getUsername())    || 
+                        history.get(nCtr).getName().contains(searchFld.getText()) &&
+                        history.get(nCtr).getUsername().equals(Frame.getUser().getUsername())){
+
+                        Product product = sqlite.getProduct(history.get(nCtr).getName());
+                        tableModel.addRow(new Object[]{
+                            history.get(nCtr).getUsername(), 
+                            history.get(nCtr).getName(), 
+                            history.get(nCtr).getStock(), 
+                            product.getPrice(), 
+                            product.getPrice() * history.get(nCtr).getStock(), 
+                            history.get(nCtr).getTimestamp()
+                        });
+                    }
+                }
+            }else{
                 
-                    Product product = sqlite.getProduct(history.get(nCtr).getName());
-                    tableModel.addRow(new Object[]{
-                        history.get(nCtr).getUsername(), 
-                        history.get(nCtr).getName(), 
-                        history.get(nCtr).getStock(), 
-                        product.getPrice(), 
-                        product.getPrice() * history.get(nCtr).getStock(), 
-                        history.get(nCtr).getTimestamp()
-                    });
+                //          LOAD CONTENTS
+                for(int nCtr = 0; nCtr < history.size(); nCtr++){
+                    if(searchFld.getText().contains(history.get(nCtr).getUsername()) || 
+                       history.get(nCtr).getUsername().contains(searchFld.getText()) || 
+                       searchFld.getText().contains(history.get(nCtr).getName()) || 
+                       history.get(nCtr).getName().contains(searchFld.getText())){
+
+
+                        Product product = sqlite.getProduct(history.get(nCtr).getName());
+                        tableModel.addRow(new Object[]{
+                            history.get(nCtr).getUsername(), 
+                            history.get(nCtr).getName(), 
+                            history.get(nCtr).getStock(), 
+                            product.getPrice(), 
+                            product.getPrice() * history.get(nCtr).getStock(), 
+                            history.get(nCtr).getTimestamp()
+                        });
+                    }
                 }
             }
+
+            
+            
+
         }
     }//GEN-LAST:event_searchBtnActionPerformed
 
