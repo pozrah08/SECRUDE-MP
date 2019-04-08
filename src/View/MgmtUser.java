@@ -43,11 +43,15 @@ public class MgmtUser extends javax.swing.JPanel {
                 editRoleBtn.setVisible(false);
                 deleteBtn.setVisible(false);
                 lockBtn.setVisible(false);
+                chgpassBtn.setText("CHANGE OWN PASS");
                 table.getTableHeader().setVisible(false);
                 break;
                 
             case "staff":
             case "manager":
+                chgpassBtn.setText("CHANGE OWN PASS");
+                break;
+                
             case "admin":
                 break;
                 
@@ -496,7 +500,7 @@ public class MgmtUser extends javax.swing.JPanel {
             designer(confpass, "CONFIRM PASSWORD");
             
             Object[] message = {
-                "Enter New Password:", oldPassword, newPassword, confpass
+                "Enter New Password (Password must have an uppercase character, number, valid symbol and must be 6-50 characters long):", oldPassword, newPassword, confpass
             };
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
@@ -568,81 +572,164 @@ public class MgmtUser extends javax.swing.JPanel {
                 }
             }
             
-        }else if(table.getSelectedRow() >=0 && currentUserRole.equals("admin")){
-            JTextField password = new JPasswordField();
+        } else if(table.getSelectedRow() >=0 && currentUserRole.equals("admin")){
+            if(!tableModel.getValueAt(table.getSelectedRow(), 0).toString().equals(Frame.getUser().getUsername())){
+                JTextField password = new JPasswordField();
+                JTextField confpass = new JPasswordField();
+                designer(password, "PASSWORD");
+                designer(confpass, "CONFIRM PASSWORD");
+
+                Object[] message = {
+                    "Enter New Password (Password must have an uppercase character, number, valid symbol and must be 6-50 characters long):", password, confpass
+                };
+
+                int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    System.out.println(password.getText());
+                    System.out.println(confpass.getText());
+
+                    if(password.getText().equals(confpass.getText())){
+                        sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
+                        System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " changed their password to " + password.getText());
+                    }
+
+                    //      CLEAR TABLE
+                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                        tableModel.removeRow(0);
+                    }
+
+                    //      LOAD CONTENTS
+                    ArrayList<User> users = sqlite.getUsers();
+                    ArrayList<User> filteredUsers = new ArrayList<User>();
+                    //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
+                    switch(currentUserRole){
+                        case "client":
+                            break;
+
+                        case "staff":
+                            for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                                if(users.get(nCtr).getRole() == 1 || 
+                                   users.get(nCtr).getRole() == 2){
+                                    filteredUsers.add(users.get(nCtr));
+                                }
+                            }
+                            break;
+                        case "manager":
+                            for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                                if(users.get(nCtr).getRole() == 1 || 
+                                   users.get(nCtr).getRole() == 2 || 
+                                   users.get(nCtr).getRole() == 3){
+                                    filteredUsers.add(users.get(nCtr));
+                                }
+                            }
+                            break;
+                        case "admin":
+                            for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                                if(users.get(nCtr).getRole() == 1 || 
+                                   users.get(nCtr).getRole() == 2 || 
+                                   users.get(nCtr).getRole() == 3 || 
+                                   users.get(nCtr).getRole() == 4 ||
+                                   users.get(nCtr).getRole() == 5){
+                                    filteredUsers.add(users.get(nCtr));
+                                }
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                    for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
+                        tableModel.addRow(new Object[]{
+                            filteredUsers.get(nCtr).getUsername(), 
+                            filteredUsers.get(nCtr).getPassword(), 
+                            filteredUsers.get(nCtr).getRole(), 
+                            filteredUsers.get(nCtr).getLocked()});
+                    }
+                }
+        } else {
+            JTextField oldPassword = new JPasswordField();
+            JTextField newPassword = new JPasswordField();
             JTextField confpass = new JPasswordField();
-            designer(password, "PASSWORD");
+            designer(oldPassword, "OLD PASSWORD");
+            designer(newPassword, "NEW PASSWORD");
             designer(confpass, "CONFIRM PASSWORD");
             
             Object[] message = {
-                "Enter New Password:", password, confpass
+                "Enter New Password (Password must have an uppercase character, number, valid symbol and must be 6-50 characters long):", oldPassword, newPassword, confpass
             };
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
-            if (result == JOptionPane.OK_OPTION) {
-                System.out.println(password.getText());
-                System.out.println(confpass.getText());
-                
-                if(password.getText().equals(confpass.getText())){
-                    sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
-                    System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " changed their password to " + password.getText());
-                }
-                
-                //      CLEAR TABLE
-                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                    tableModel.removeRow(0);
-                }
+            String currentUserPass = sqlite.getUser(Frame.getUser().getUsername()).get(0).getPassword();
+            String oldPassTemp = oldPassword.getText();
+            
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-512"); 
 
-                //      LOAD CONTENTS
-                ArrayList<User> users = sqlite.getUsers();
-                ArrayList<User> filteredUsers = new ArrayList<User>();
-                //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
-                switch(currentUserRole){
-                    case "client":
-                        break;
+                byte[] messageDigest = md.digest(oldPassTemp.getBytes()); 
 
-                    case "staff":
-                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                            if(users.get(nCtr).getRole() == 1 || 
-                               users.get(nCtr).getRole() == 2){
-                                filteredUsers.add(users.get(nCtr));
-                            }
-                        }
-                        break;
-                    case "manager":
-                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                            if(users.get(nCtr).getRole() == 1 || 
-                               users.get(nCtr).getRole() == 2 || 
-                               users.get(nCtr).getRole() == 3){
-                                filteredUsers.add(users.get(nCtr));
-                            }
-                        }
-                        break;
-                    case "admin":
-                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                            if(users.get(nCtr).getRole() == 1 || 
-                               users.get(nCtr).getRole() == 2 || 
-                               users.get(nCtr).getRole() == 3 || 
-                               users.get(nCtr).getRole() == 4 ||
-                               users.get(nCtr).getRole() == 5){
-                                filteredUsers.add(users.get(nCtr));
-                            }
-                        }
-                        break;
+                BigInteger no = new BigInteger(1, messageDigest); 
 
-                    default:
-                        break;
-                }
-                for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
-                    tableModel.addRow(new Object[]{
-                        filteredUsers.get(nCtr).getUsername(), 
-                        filteredUsers.get(nCtr).getPassword(), 
-                        filteredUsers.get(nCtr).getRole(), 
-                        filteredUsers.get(nCtr).getLocked()});
+                oldPassTemp = no.toString(16); 
+
+                while (oldPassTemp.length() < 32) { 
+                    oldPassTemp = "0" + oldPassTemp; 
+                } 
+            } catch (NoSuchAlgorithmException e) { 
+                throw new RuntimeException(e); 
+            }
+            
+            System.out.println("CURRENT USER'S PASS: " + currentUserPass);
+            System.out.println("INPUT FOR OLD PASS FIELD: " + oldPassTemp);
+            
+            if(result == JOptionPane.OK_OPTION){ // clicks ok
+                if(currentUserPass.equals(oldPassTemp)){ // check if they put the correct current password
+                    System.out.println(newPassword.getText());
+                    System.out.println(confpass.getText());
+                    
+                    boolean hasUppercase = false;
+                    boolean hasNum = false;
+                    boolean hasSymbol = false;
+                    boolean passIs6 = true;
+                    
+                    if(newPassword.getText().matches("(.*)[-+_!@#$%^&*.,?](.*)")){ //check if the password has a symbol
+                        hasSymbol = true;
+                    }
+                    
+                    if(oldPassword.toString().length() < 6 && oldPassword.toString().length() > 50){ // check valid password length
+                        passIs6 = false;
+                    }
+                    
+                    char[] passwordArray = newPassword.getText().toCharArray();
+                    
+                    for(int i = 0; i < passwordArray.length; i++){
+                        if(Character.isUpperCase(passwordArray[i])){ //check if the password has an uppercase character
+                            hasUppercase = true;
+                        }
+
+                        if(Character.isDigit(passwordArray[i])){ // check if the password has a number
+                            hasNum = true;
+                        }
+                    }
+                    
+                    if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
+                        if(newPassword.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
+                            sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
+                            System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
+                        } else { // new password and confirm password differ in input
+                           JOptionPane.showMessageDialog(null, "Passwords do not match.");
+                        }
+                    } else { // password does not meet one or more requirements
+                       JOptionPane.showMessageDialog(null, "Password must have an uppercase character, number, valid symbol and must be 6-50 characters long.");
+                    }
+                } else { // password is not equal to current password
+                    JOptionPane.showMessageDialog(null, "Old password does not match.");
                 }
             }
         }
+        }
+    
     }//GEN-LAST:event_chgpassBtnActionPerformed
 
 
