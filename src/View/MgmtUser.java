@@ -501,7 +501,7 @@ public class MgmtUser extends javax.swing.JPanel {
 
             int result = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
             
-            String currentUserPass = Frame.getUser().getPassword();
+            String currentUserPass = sqlite.getUser(Frame.getUser().getUsername()).get(0).getPassword();
             String oldPassTemp = oldPassword.getText();
             
             try {
