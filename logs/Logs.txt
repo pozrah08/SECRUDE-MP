@@ -8,3 +8,9 @@ NOTICEadminUser creation successful2019-04-09 22:18:22.138
 NOTICEmanagerUser creation successful2019-04-09 22:18:22.163
 NOTICEadminUser creation successful2019-04-09 22:18:22.193
 EDITadminUser cleared logs2019-04-09 22:18:39.841
+NOTICEadminUser creation successful2019-04-09 22:35:48.509
+NOTICEmanagerUser creation successful2019-04-09 22:35:48.624
+NOTICEadminUser creation successful2019-04-09 22:35:48.744
+EDITmanagerUser role edited2019-04-09 22:36:00.982
+EDITadminUser cleared logs2019-04-09 22:36:13.078
+EDITadminUser cleared logs2019-04-09 22:36:14.046
