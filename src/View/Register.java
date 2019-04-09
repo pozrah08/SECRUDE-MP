@@ -4,6 +4,7 @@ package View;
 import Model.User;
 import java.awt.Color;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class Register extends javax.swing.JPanel {
 
@@ -113,7 +114,7 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-        String password1, password2, username;
+        String password1, password2, username, usernameErrorMsg = "",passwordErrorMsg = "";
         boolean foundUser, hasUppercase, hasNum, hasSymbol, passIs6, uNameIs6, passMatch, usernameSpecialChar;
         ArrayList <User> userList;
         
@@ -133,13 +134,6 @@ public class Register extends javax.swing.JPanel {
         passMatch = true;
         usernameSpecialChar = false;
         
-        //clearing the error messages
-//        userErrorMsg.setVisible(false);
-//        userErrorMsg1.setVisible(false);
-//        passwordErrorMsg.setVisible(false);
-//        confErrorMsg.setVisible(false);
-//        usernameLbl.setForeground(Color.black);
-//        passwordLbl.setForeground(Color.black);
         
         //check if username has special characters
         char[] usernameArray = username.toCharArray();
@@ -147,6 +141,7 @@ public class Register extends javax.swing.JPanel {
             if(!(Character.isDigit(usernameArray[i])) && !(Character.isLetter(usernameArray[i]))){  //special characters
                 usernameSpecialChar = true;
 //                usernameLbl.setForeground(Color.red);
+                usernameErrorMsg += "Username cannot contain a special character.\n" ;
             }
         }
          
@@ -163,6 +158,7 @@ public class Register extends javax.swing.JPanel {
         if(!password1.equals(password2)){
             passMatch = false;
 //            confErrorMsg.setVisible(true);
+            passwordErrorMsg += "Passwords do not match. \n";
             System.out.println("Password 1 (" + password1 + ") Password 2(" + password2 + ")");
         }
         
@@ -182,19 +178,21 @@ public class Register extends javax.swing.JPanel {
             }
         }
         
-//        if(!hasUppercase || !hasNum){
-//            passwordLbl.setForeground(Color.red);
-//        }
-//        
+        if(!hasUppercase || !hasNum || !hasSymbol){
+            passwordErrorMsg += "Password must have at least one uppercase character, a number, and a special character.\n";
+        }
+        
 //        ENFORCE MAX LENGTH OF USERNAME AND PASSWORD
         if(username.length() < 6 && username.length() > 50){
             uNameIs6 = false;
 //            userErrorMsg1.setVisible(true);
+            usernameErrorMsg += "Username must be at least 6 characters long. \n";
         }
         
         if(password1.length() < 6 && password1.length() > 50){
             passIs6 = false;
 //            passwordErrorMsg.setVisible(true);
+            passwordErrorMsg += "Password must be at least 6 characters long. \n";
         }
         
         if(!foundUser && passMatch && hasUppercase && hasNum && uNameIs6 && passIs6 && hasSymbol && !usernameSpecialChar){
@@ -218,6 +216,13 @@ public class Register extends javax.swing.JPanel {
             
             
             frame.loginNav();
+        }else if(foundUser){
+            usernameErrorMsg = "Username already exists.\n";
+            String errorMsg = usernameErrorMsg + passwordErrorMsg;
+            JOptionPane.showMessageDialog(null, errorMsg);
+        }else{
+            String errorMsg = usernameErrorMsg + passwordErrorMsg;
+            JOptionPane.showMessageDialog(null, errorMsg);
         }           
     }//GEN-LAST:event_registerBtnActionPerformed
 
