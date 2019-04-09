@@ -23,6 +23,10 @@ public class ObservableBoolean {
             new CopyOnWriteArrayList<ChangeListener>();
 
     private boolean value;
+    
+    public ObservableBoolean(boolean b){
+        value = b;
+    }
 
     public boolean getValue() {
         return value;

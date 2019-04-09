@@ -18,8 +18,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class SQLite {
-    
-    public boolean DEBUG_MODE = true;
+    // debug mode is off when initialized
+    public ObservableBoolean DEBUG_MODE = new ObservableBoolean(false);
     String driverURL = "jdbc:sqlite:" + "database.db";
     
     public void createNewDatabase() {
