@@ -2,7 +2,7 @@
 package View;
 
 import Model.User;
-import View.Security;
+import Utilities.Security;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.DatagramSocket;

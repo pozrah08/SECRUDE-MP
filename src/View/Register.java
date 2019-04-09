@@ -1,6 +1,7 @@
 
 package View;
 
+import Utilities.Security;
 import Model.User;
 import java.awt.Color;
 import java.util.ArrayList;

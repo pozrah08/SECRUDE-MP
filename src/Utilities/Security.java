@@ -1,5 +1,5 @@
 
-package View;
+package Utilities;
 
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
