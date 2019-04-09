@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class Login extends javax.swing.JPanel {
 
@@ -28,7 +29,6 @@ public class Login extends javax.swing.JPanel {
     public Login() {
         initComponents();
         
-        errorMsg.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -40,7 +40,6 @@ public class Login extends javax.swing.JPanel {
         registerBtn = new javax.swing.JButton();
         loginBtn = new javax.swing.JButton();
         passwordFld = new javax.swing.JPasswordField();
-        errorMsg = new javax.swing.JLabel();
 
         titleLbl.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         titleLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -80,10 +79,6 @@ public class Login extends javax.swing.JPanel {
             }
         });
 
-        errorMsg.setForeground(new java.awt.Color(204, 0, 0));
-        errorMsg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        errorMsg.setText("Invalid credentials!");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,10 +94,6 @@ public class Login extends javax.swing.JPanel {
                     .addComponent(titleLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(200, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(306, 306, 306)
-                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(297, 297, 297))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,9 +104,7 @@ public class Login extends javax.swing.JPanel {
                 .addComponent(usernameFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordFld, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(errorMsg, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -152,7 +141,7 @@ public class Login extends javax.swing.JPanel {
         
         // clean input from textField  
         username = Security.cleanString(usernameFld.getText());
-        password = Security.cleanString(hashString(passwordFld.getText()));
+        password = Security.cleanString(hashString(passwordFld.getText().trim()));
         
         for(int nCtr = 0; nCtr < users.size(); nCtr++){
             if(users.get(nCtr).getUsername().equalsIgnoreCase(username)){
@@ -183,8 +172,6 @@ public class Login extends javax.swing.JPanel {
                     usernameFld.setText("");
                     passwordFld.setText("");
 
-                    //clear error msg
-                    errorMsg.setVisible(false);
                 }else{
                     //locked account
                     System.out.println("ACCOUNT IS LOCKED. CONTACT AN ADMIN TO UNLOCK YOUR ACCOUNT");
@@ -197,14 +184,14 @@ public class Login extends javax.swing.JPanel {
         }else if(attempts < maxAttempts){
             //account not found but attempts still remain
             System.out.println("Invalid Credentials!");
-            errorMsg.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Invalid Credentials!");
             attempts++; //add to number of invalid attempts
             //ALERT
             
         } else{
             //Max attempts(per session) reached: LOCKOUT
             System.out.println("===Locked Out=== ");
-            errorMsg.setText("You have been locked out.");
+            JOptionPane.showMessageDialog(null, "You have been locked out.");
             //update log
             //get today's date
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -228,14 +215,13 @@ public class Login extends javax.swing.JPanel {
             } catch (IOException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
-            errorMsg.setVisible(true);
+          
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
         usernameFld.setText("");
         passwordFld.setText("");
-        errorMsg.setVisible(false);
         
         frame.registerNav();
     }//GEN-LAST:event_registerBtnActionPerformed
@@ -246,7 +232,6 @@ public class Login extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel errorMsg;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordFld;
     private javax.swing.JButton registerBtn;
