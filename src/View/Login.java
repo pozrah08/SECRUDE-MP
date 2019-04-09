@@ -175,10 +175,12 @@ public class Login extends javax.swing.JPanel {
 
                 }else{
                     //locked account
+                    JOptionPane.showMessageDialog(null, "Account is locked. Contact an admin to unlock your account");
                     System.out.println("ACCOUNT IS LOCKED. CONTACT AN ADMIN TO UNLOCK YOUR ACCOUNT");
                 }
             }else {
                 //disabled account
+                JOptionPane.showMessageDialog(null, "Account is disabled. Cannot log in.");
                 System.out.println("ACCOUNT IS DISABLED. CANNOT LOG IN");
             }
             
