@@ -255,30 +255,30 @@ public class MgmtUser extends javax.swing.JPanel {
             ArrayList<String> options = new ArrayList<String>();
             
             switch(currentUserRole){
-            case "client":
-                break;
-                
-            case "staff":
-                options.add("1-DISABLED");
-                options.add("2-CLIENT");
-                break;
-                
-            case "manager":
-                options.add("1-DISABLED");
-                options.add("2-CLIENT");
-                options.add("3-STAFF");
-                break;
-                
-            case "admin":
-                options.add("1-DISABLED");
-                options.add("2-CLIENT");
-                options.add("3-STAFF");
-                options.add("4-MANAGER");
-                options.add("5-ADMIN");
-                break;
-                
-            default:
-                break;
+                case "client":
+                    break;
+
+                case "staff":
+                    options.add("1-DISABLED");
+                    options.add("2-CLIENT");
+                    break;
+
+                case "manager":
+                    options.add("1-DISABLED");
+                    options.add("2-CLIENT");
+                    options.add("3-STAFF");
+                    break;
+
+                case "admin":
+                    options.add("1-DISABLED");
+                    options.add("2-CLIENT");
+                    options.add("3-STAFF");
+                    options.add("4-MANAGER");
+                    options.add("5-ADMIN");
+                    break;
+
+                default:
+                    break;
             }
             
             JComboBox optionList = new JComboBox(options.toArray());
@@ -307,43 +307,43 @@ public class MgmtUser extends javax.swing.JPanel {
             ArrayList<User> filteredUsers = new ArrayList<User>();
             //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
             switch(currentUserRole){
-            case "client":
-                break;
-                
-            case "staff":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 ||
-                       users.get(nCtr).getRole() == 3){
-                        filteredUsers.add(users.get(nCtr));
+                case "client":
+                    break;
+
+                case "staff":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 ||
+                           users.get(nCtr).getRole() == 3){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-            case "manager":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 ||
-                       users.get(nCtr).getRole() == 4){
-                        filteredUsers.add(users.get(nCtr));
+                    break;
+                case "manager":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 ||
+                           users.get(nCtr).getRole() == 4){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-            case "admin":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 || 
-                       users.get(nCtr).getRole() == 4 ||
-                       users.get(nCtr).getRole() == 5){
-                        filteredUsers.add(users.get(nCtr));
+                    break;
+                case "admin":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 || 
+                           users.get(nCtr).getRole() == 4 ||
+                           users.get(nCtr).getRole() == 5){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-                
-            default:
-                break;
-        }
+                    break;
+
+                default:
+                    break;
+            }
             for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
                 tableModel.addRow(new Object[]{
                     filteredUsers.get(nCtr).getUsername(), 
@@ -376,43 +376,43 @@ public class MgmtUser extends javax.swing.JPanel {
                 ArrayList<User> filteredUsers = new ArrayList<User>();
                 //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
                 switch(currentUserRole){
-            case "client":
-                break;
-                
-            case "staff":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 ||
-                       users.get(nCtr).getRole() == 3){
-                        filteredUsers.add(users.get(nCtr));
-                    }
+                    case "client":
+                        break;
+
+                    case "staff":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 ||
+                               users.get(nCtr).getRole() == 3){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "manager":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3 ||
+                               users.get(nCtr).getRole() == 4){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+                    case "admin":
+                        for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                            if(users.get(nCtr).getRole() == 1 || 
+                               users.get(nCtr).getRole() == 2 || 
+                               users.get(nCtr).getRole() == 3 || 
+                               users.get(nCtr).getRole() == 4 ||
+                               users.get(nCtr).getRole() == 5){
+                                filteredUsers.add(users.get(nCtr));
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
-                break;
-            case "manager":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 ||
-                       users.get(nCtr).getRole() == 4){
-                        filteredUsers.add(users.get(nCtr));
-                    }
-                }
-                break;
-            case "admin":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 || 
-                       users.get(nCtr).getRole() == 4 ||
-                       users.get(nCtr).getRole() == 5){
-                        filteredUsers.add(users.get(nCtr));
-                    }
-                }
-                break;
-                
-            default:
-                break;
-        }
                 for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
                     tableModel.addRow(new Object[]{
                         filteredUsers.get(nCtr).getUsername(), 
@@ -436,7 +436,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 state = "unlock";
             }
             
-            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "DELETE USER", JOptionPane.YES_NO_OPTION);
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to " + state + " " + tableModel.getValueAt(table.getSelectedRow(), 0) + "?", "LOCK USER", JOptionPane.YES_NO_OPTION);
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
@@ -445,7 +445,6 @@ public class MgmtUser extends javax.swing.JPanel {
                 if(lockedVal == 1){
                     lockedVal = 0;
                 }
-                
                 else if (lockedVal == 0){
                     lockedVal = 1;
                 }
@@ -455,7 +454,6 @@ public class MgmtUser extends javax.swing.JPanel {
                 sqlite.toggleUserLock(selectedUser, lockedVal);
                 sqlite.addLogs("EDIT", selectedUser, "User lock toggled", new Timestamp(new Date().getTime()).toString());               
             }
-            
                 //      CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
                 tableModel.removeRow(0);
@@ -466,43 +464,43 @@ public class MgmtUser extends javax.swing.JPanel {
             ArrayList<User> filteredUsers = new ArrayList<User>();
             //      FILTER OUT USERS BASED ON THE ROLE OF PERSON CURRENTLY LOGGED IN
             switch(currentUserRole){
-            case "client":
-                break;
-                
-            case "staff":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 ||
-                       users.get(nCtr).getRole() == 3){
-                        filteredUsers.add(users.get(nCtr));
+                case "client":
+                    break;
+
+                case "staff":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 ||
+                           users.get(nCtr).getRole() == 3){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-            case "manager":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 ||
-                       users.get(nCtr).getRole() == 4){
-                        filteredUsers.add(users.get(nCtr));
+                    break;
+                case "manager":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 ||
+                           users.get(nCtr).getRole() == 4){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-            case "admin":
-                for(int nCtr = 0; nCtr < users.size(); nCtr++){
-                    if(users.get(nCtr).getRole() == 1 || 
-                       users.get(nCtr).getRole() == 2 || 
-                       users.get(nCtr).getRole() == 3 || 
-                       users.get(nCtr).getRole() == 4 ||
-                       users.get(nCtr).getRole() == 5){
-                        filteredUsers.add(users.get(nCtr));
+                    break;
+                case "admin":
+                    for(int nCtr = 0; nCtr < users.size(); nCtr++){
+                        if(users.get(nCtr).getRole() == 1 || 
+                           users.get(nCtr).getRole() == 2 || 
+                           users.get(nCtr).getRole() == 3 || 
+                           users.get(nCtr).getRole() == 4 ||
+                           users.get(nCtr).getRole() == 5){
+                            filteredUsers.add(users.get(nCtr));
+                        }
                     }
-                }
-                break;
-                
-            default:
-                break;
-        }
+                    break;
+
+                default:
+                    break;
+            }
             for(int nCtr = 0; nCtr < filteredUsers.size(); nCtr++){
                 tableModel.addRow(new Object[]{
                     filteredUsers.get(nCtr).getUsername(), 

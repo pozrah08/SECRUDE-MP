@@ -333,14 +333,14 @@ public class SQLite {
     }
     
     public void toggleUserLock(String username, int lock){
-        String sql = "UPDATE users SET locked = ? WHERE username = ? ;";
+        String sql = "UPDATE users SET locked=? WHERE username=? ;";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setInt(1, lock);
             pstmt.setString(2, username);
-            pstmt.executeQuery();
-            
+            pstmt.executeUpdate();
+            System.out.println("User " + username + " has been locked/unlocked.");
         } catch (Exception ex) {}
     }
     
