@@ -56,7 +56,7 @@ public class Register extends javax.swing.JPanel {
 
         passwordFld.setBackground(new java.awt.Color(240, 240, 240));
         passwordFld.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
+        passwordFld.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true), "PASSWORD (One uppercase letter, a number, and a valid special character (-+_!@#$%^&*.,?))", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 12))); // NOI18N
         passwordFld.setMinimumSize(new java.awt.Dimension(12, 45));
         passwordFld.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -87,13 +87,13 @@ public class Register extends javax.swing.JPanel {
                 .addComponent(backBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(200, 200, 200)
+                .addGap(104, 104, 104)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(confirmPassFld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(passwordFld, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(usernameFld, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(200, 200, 200))
+                .addGap(125, 125, 125))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +180,7 @@ public class Register extends javax.swing.JPanel {
         }
         
         if(!hasUppercase || !hasNum || !hasSymbol){
-            passwordErrorMsg += "Password must have at least one uppercase character, a number, and a special character.\n";
+            passwordErrorMsg += "Password must have at least one uppercase character, a number, and a valid special character.\n";
         }
         
 //        ENFORCE MAX LENGTH OF USERNAME AND PASSWORD
