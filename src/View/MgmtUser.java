@@ -10,7 +10,9 @@ import Model.User;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -286,6 +288,8 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(result.charAt(0));
                 
                 sqlite.editUserRole(selectedUser, Integer.parseInt(result.charAt(0) + ""));
+                sqlite.addLogs("EDIT", selectedUser, "User role edited", new Timestamp(new Date().getTime()).toString());
+
             }
             
              //      CLEAR TABLE
@@ -350,6 +354,8 @@ public class MgmtUser extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                sqlite.addLogs("EDIT", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "User deleted", new Timestamp(new Date().getTime()).toString());
+
                 
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -433,6 +439,7 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(selectedUser + " " + lockedVal);
                 
                 sqlite.toggleUserLock(selectedUser, lockedVal);
+                sqlite.addLogs("EDIT", selectedUser, "User lock toggled", new Timestamp(new Date().getTime()).toString());               
             }
             
                 //      CLEAR TABLE
@@ -560,6 +567,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
                         if(newPassword.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
                             sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
+                            sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User password changed", new Timestamp(new Date().getTime()).toString());
                             System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
                         } else { // new password and confirm password differ in input
                            JOptionPane.showMessageDialog(null, "Passwords do not match.");
