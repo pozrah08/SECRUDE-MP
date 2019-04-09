@@ -1,0 +1,3 @@
+NOTICEadminUser creation successful2019-04-09 21:40:53.031
+NOTICEmanagerUser creation successful2019-04-09 21:40:53.333
+NOTICEadminUser creation successful2019-04-09 21:40:53.357

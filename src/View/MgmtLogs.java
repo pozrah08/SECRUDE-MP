@@ -8,7 +8,10 @@ package View;
 import Controller.SQLite;
 import Model.Logs;
 import Utilities.Security;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -156,12 +159,25 @@ public class MgmtLogs extends javax.swing.JPanel {
         }
         
         // CREATE TEXT FILE
-        sqlite.getLogs();
-        Security.updateLog();
-        
+        ArrayList<Logs> logs = sqlite.getLogs();
+        for(int nCtr = 0; nCtr < logs.size(); nCtr++){
+            StringBuilder sb = new StringBuilder();
+            sb = sb.append(logs.get(nCtr).getEvent());
+            sb = sb.append(logs.get(nCtr).getUsername());
+            sb = sb.append(logs.get(nCtr).getDesc());
+            sb = sb.append(logs.get(nCtr).getTimestamp());
+
+            try {
+                Security.updateLog(sb.toString());
+            } catch (IOException ex) {
+                Logger.getLogger(MgmtLogs.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        System.out.println("New log file created.");
+                
         // REMOVE ALL ROWS IN DB
-        sqlite.dropLogsTable();
-        sqlite.createLogsTable();
+//        sqlite.dropLogsTable();
+//        sqlite.createLogsTable();
 
     }//GEN-LAST:event_clearBtnActionPerformed
 
