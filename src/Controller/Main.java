@@ -6,6 +6,8 @@ import Model.Logs;
 import Model.Product;
 import Model.User;
 import View.Frame;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +25,22 @@ public class Main {
     public void init(){
         // Initialize a driver object
         sqlite = new SQLite();
+        // Toggle sysout
+        PrintStream debug_on = System.out;
+        PrintStream debug_off = new PrintStream(new OutputStream(){
+            public void write(int b) {
+                // NO-OP
+            }
+        });
+        
+        // DEBUG MDE ON
+        if(sqlite.DEBUG_MODE == 1){
+            System.setOut(debug_on);
+            System.out.println("DEBUG MODE ON");
+        } else {
+        // DEBUG MODE OFF, do not print anything
+            System.setOut(debug_off);
+        }
 
         // Create a database
         sqlite.createNewDatabase();
