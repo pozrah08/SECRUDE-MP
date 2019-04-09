@@ -193,28 +193,6 @@ public class Login extends javax.swing.JPanel {
             System.out.println("===Locked Out=== ");
             JOptionPane.showMessageDialog(null, "You have been locked out.");
             //update log
-            //get today's date
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Date date = new Date();            
-            //get preferred outbound ip
-            String ip = "";
-            try(final DatagramSocket socket = new DatagramSocket()){
-                socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-                ip = socket.getLocalAddress().getHostAddress();
-            } catch (SocketException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (UnknownHostException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            try {
-                // [LOCKOUT] date username password ip
-                Security.updateLog("[LOCKOUT] " + dateFormat.format(date) + " " + 
-                                    usernameFld.getText() + " " + passwordFld.getText() + " " +
-                                    ip);
-            } catch (IOException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
           
         }
     }//GEN-LAST:event_loginBtnActionPerformed

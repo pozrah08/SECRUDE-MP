@@ -7,6 +7,7 @@ package View;
 
 import Controller.SQLite;
 import Model.Logs;
+import Utilities.Security;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -149,7 +150,19 @@ public class MgmtLogs extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void clearBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBtnActionPerformed
+        // CLEAR TABLE
+        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+            tableModel.removeRow(0);
+        }
         
+        // CREATE TEXT FILE
+        sqlite.getLogs();
+        Security.updateLog();
+        
+        // REMOVE ALL ROWS IN DB
+        sqlite.dropLogsTable();
+        sqlite.createLogsTable();
+
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
