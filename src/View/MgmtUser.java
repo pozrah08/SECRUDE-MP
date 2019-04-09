@@ -702,6 +702,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
                         if(newPassword.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
                             sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
+                            JOptionPane.showMessageDialog(null, "Successfully changed password.");
                             sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User password changed", new Timestamp(new Date().getTime()).toString());
                             System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
                         } else { // new password and confirm password differ in input
@@ -784,6 +785,7 @@ public class MgmtUser extends javax.swing.JPanel {
                                 if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
                                     if(password.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
                                         sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
+                                        JOptionPane.showMessageDialog(null, "Successfully changed password.");
                                         System.out.println(Frame.getUser().getUsername() + " changed their password to " + password.getText());
 
 
@@ -928,6 +930,7 @@ public class MgmtUser extends javax.swing.JPanel {
                     if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
                         if(newPassword.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
                             sqlite.changePassword(Frame.getUser().getUsername(), newPassword.getText());
+                            JOptionPane.showMessageDialog(null, "Successfully changed password.");
                             System.out.println(Frame.getUser().getUsername() + " changed their password to " + newPassword.getText());
                             
                             
