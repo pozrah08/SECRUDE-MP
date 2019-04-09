@@ -273,6 +273,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 
                 if(!productExists){
                     sqlite.addProduct(Security.cleanString(nameFld.getText().trim()), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                    sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User added product", new Timestamp(new Date().getTime()).toString());
 
                     //      CLEAR TABLE
                     for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -319,6 +320,7 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(priceFld.getText());
                 
                 sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
                 
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -344,6 +346,7 @@ public class MgmtProduct extends javax.swing.JPanel {
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 sqlite.removeProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User deleted product", new Timestamp(new Date().getTime()).toString());
             
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
