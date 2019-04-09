@@ -5,6 +5,8 @@ import Model.User;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.sql.Timestamp;
+import java.util.Date;
 import javax.swing.WindowConstants;
 
 public class Frame extends javax.swing.JFrame {
@@ -284,6 +286,7 @@ public class Frame extends javax.swing.JFrame {
     
     public void registerAction(String username, String password){
         main.sqlite.addUser(username, password);
+        main.sqlite.addLogs("NOTICE", username, "User creation successful", new Timestamp(new Date().getTime()).toString());
     }
     
     public void setUser(User user){
