@@ -300,6 +300,7 @@ public class MgmtProduct extends javax.swing.JPanel {
 
     private void editBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBtnActionPerformed
         if(table.getSelectedRow() >= 0){
+            String oldName = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
             JTextField nameFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 0) + "");
             JTextField stockFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 1) + "");
             JTextField priceFld = new JTextField(tableModel.getValueAt(table.getSelectedRow(), 2) + "");
@@ -319,30 +320,68 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                 
-                if(Integer.parseInt(stockFld.getText()) >= 0 && Double.parseDouble(priceFld.getText()) > 0){
-                    sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
-                    sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
+                if(oldName.equals(nameFld.getText())){ //product name stays the same
+                    if(Integer.parseInt(stockFld.getText()) >= 0 && Double.parseDouble(priceFld.getText()) > 0){
+                    
+                        sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText().trim(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                        sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
 
-                    //      CLEAR TABLE
-                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                        tableModel.removeRow(0);
+                        //      CLEAR TABLE
+                        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                            tableModel.removeRow(0);
+                        }
+
+                        //      LOAD CONTENTS
+                        ArrayList<Product> products = sqlite.getProduct();
+                        for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                            tableModel.addRow(new Object[]{
+                                products.get(nCtr).getName(), 
+                                products.get(nCtr).getStock(), 
+                                products.get(nCtr).getPrice()});
+                        }
+                        
+                        JOptionPane.showMessageDialog(null, "Successfully updated the product!");
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
                     }
+                }else{ //changed product name
+                    if(Integer.parseInt(stockFld.getText()) >= 0 && Double.parseDouble(priceFld.getText()) > 0){
+                        ArrayList<Product> nProducts = sqlite.getProduct();
+                        Boolean productExists = false;
 
-                    //      LOAD CONTENTS
-                    ArrayList<Product> products = sqlite.getProduct();
-                    for(int nCtr = 0; nCtr < products.size(); nCtr++){
-                        tableModel.addRow(new Object[]{
-                            products.get(nCtr).getName(), 
-                            products.get(nCtr).getStock(), 
-                            products.get(nCtr).getPrice()});
+                        for(int i =0; i< nProducts.size(); i++){
+                            if(nProducts.get(i).getName().toLowerCase().equals(nameFld.getText().trim().toLowerCase())){
+                                productExists = true;
+                            }
+                        }
+
+                        if(!productExists){ //if product is unique
+                            sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText().trim(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                            sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
+
+                            //      CLEAR TABLE
+                            for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                                tableModel.removeRow(0);
+                            }
+
+                            //      LOAD CONTENTS
+                            ArrayList<Product> products = sqlite.getProduct();
+                            for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                                tableModel.addRow(new Object[]{
+                                    products.get(nCtr).getName(), 
+                                    products.get(nCtr).getStock(), 
+                                    products.get(nCtr).getPrice()});
+                            }
+                            JOptionPane.showMessageDialog(null, "Successfully updated the product!");
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Product already exists.");
+                        }
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
                     }
                     
-                    JOptionPane.showMessageDialog(null, "Successfully updated the product.");
-                }else{
-                    JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
                 }
-                
-                
+         
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed
