@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 
@@ -25,6 +27,8 @@ public class Main {
     public void init(){
         // Initialize a driver object
         sqlite = new SQLite();
+        
+        // DEBUG BLOCK
         // Toggle sysout
         PrintStream debug_on = System.out;
         PrintStream debug_off = new PrintStream(new OutputStream(){
@@ -32,15 +36,22 @@ public class Main {
                 // NO-OP
             }
         });
-        
-        // DEBUG MDE ON
-        if(sqlite.DEBUG_MODE.getValue() == true){
-            System.setOut(debug_on);
-            System.out.println("DEBUG MODE ON");
-        } else {
-        // DEBUG MODE OFF, do not print anything
-            System.setOut(debug_off);
-        }
+        System.setOut(debug_off); //debug mode is off by default
+        ChangeListener debuglistener = new ChangeListener(){
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // DEBUG MODE ON
+                if(sqlite.DEBUG_MODE.getValue() == true){
+                    System.setOut(debug_on);
+                    System.out.println("DEBUG MODE ON");
+                } else {
+                // DEBUG MODE OFF, do not print anything
+                    System.setOut(debug_off);
+                }
+            }            
+        };
+        sqlite.DEBUG_MODE.addChangeListener(debuglistener);
+        // END OF DEBUG BLOCK
 
         // Create a database
         sqlite.createNewDatabase();
