@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class SQLite {
     
-    public int DEBUG_MODE = 0;
+    public boolean DEBUG_MODE = true;
     String driverURL = "jdbc:sqlite:" + "database.db";
     
     public void createNewDatabase() {

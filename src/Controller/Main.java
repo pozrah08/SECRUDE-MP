@@ -34,7 +34,7 @@ public class Main {
         });
         
         // DEBUG MDE ON
-        if(sqlite.DEBUG_MODE == 1){
+        if(sqlite.DEBUG_MODE == true){
             System.setOut(debug_on);
             System.out.println("DEBUG MODE ON");
         } else {

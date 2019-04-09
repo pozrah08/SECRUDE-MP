@@ -153,10 +153,11 @@ public class MgmtLogs extends javax.swing.JPanel {
     }//GEN-LAST:event_clearBtnActionPerformed
 
     private void debugBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_debugBtnActionPerformed
-        if(sqlite.DEBUG_MODE == 1)
-            sqlite.DEBUG_MODE = 0;
+        if(sqlite.DEBUG_MODE == true)
+            sqlite.DEBUG_MODE = false;
         else
-            sqlite.DEBUG_MODE = 1;
+            sqlite.DEBUG_MODE = true;
+        System.out.println(sqlite.DEBUG_MODE);
     }//GEN-LAST:event_debugBtnActionPerformed
 
 
