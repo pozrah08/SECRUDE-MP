@@ -154,7 +154,7 @@ public class Login extends javax.swing.JPanel {
             }
         }
         
-        if(found){
+        if(found && (attempts < maxAttempts) ){
             int role = user.getRole();
             int locked = user.getLocked();
             

@@ -319,22 +319,30 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                 
-                sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
-                sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
-                
-                //      CLEAR TABLE
-                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                    tableModel.removeRow(0);
-                }
+                if(Integer.parseInt(stockFld.getText()) >= 0 && Double.parseDouble(priceFld.getText()) > 0){
+                    sqlite.updateProduct(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                    sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User edited product", new Timestamp(new Date().getTime()).toString());
 
-                //      LOAD CONTENTS
-                ArrayList<Product> products = sqlite.getProduct();
-                for(int nCtr = 0; nCtr < products.size(); nCtr++){
-                    tableModel.addRow(new Object[]{
-                        products.get(nCtr).getName(), 
-                        products.get(nCtr).getStock(), 
-                        products.get(nCtr).getPrice()});
+                    //      CLEAR TABLE
+                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                        tableModel.removeRow(0);
+                    }
+
+                    //      LOAD CONTENTS
+                    ArrayList<Product> products = sqlite.getProduct();
+                    for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                        tableModel.addRow(new Object[]{
+                            products.get(nCtr).getName(), 
+                            products.get(nCtr).getStock(), 
+                            products.get(nCtr).getPrice()});
+                    }
+                    
+                    JOptionPane.showMessageDialog(null, "Successfully updated the product.");
+                }else{
+                    JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
                 }
+                
+                
             }
         }
     }//GEN-LAST:event_editBtnActionPerformed

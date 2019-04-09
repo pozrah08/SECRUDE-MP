@@ -292,8 +292,48 @@ public class MgmtUser extends javax.swing.JPanel {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
                 System.out.println(result.charAt(0));
                 
-                sqlite.editUserRole(selectedUser, Integer.parseInt(result.charAt(0) + ""));
-                sqlite.addLogs("EDIT", selectedUser, "User role edited", new Timestamp(new Date().getTime()).toString());
+                
+               // if(Frame.getUser().getRole() == 5 && Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 2).toString()) == 5){ //if the user is an admin and trying to edit another admin's role
+                    JTextField userPassword = new JPasswordField();
+   
+                
+                    designer(userPassword, "YOUR PASSWORD FOR VERIFICATION");
+
+
+                    Object[] message = {
+                        "Enter your own password for verification", userPassword
+                    };
+
+                    int result1 = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+
+                    if (result1 == JOptionPane.OK_OPTION) {
+
+                        String userPassTemp = userPassword.getText();
+
+                        try {
+                            MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+
+                            byte[] messageDigest = md.digest(userPassTemp.getBytes()); 
+
+                            BigInteger no = new BigInteger(1, messageDigest); 
+
+                            userPassTemp = no.toString(16); 
+
+                            while (userPassTemp.length() < 32) { 
+                                userPassTemp = "0" + userPassTemp; 
+                            } 
+                        } catch (NoSuchAlgorithmException e) { 
+                            throw new RuntimeException(e); 
+                        }
+
+                        if(userPassTemp.equals(Frame.getUser().getPassword())){
+                            sqlite.editUserRole(selectedUser, Integer.parseInt(result.charAt(0) + ""));
+                            sqlite.addLogs("EDIT", selectedUser, "User role edited", new Timestamp(new Date().getTime()).toString());
+                            
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Your password does not match.");
+                        }
+                    }
 
             }
             
@@ -362,9 +402,49 @@ public class MgmtUser extends javax.swing.JPanel {
             
             if (result == JOptionPane.YES_OPTION) {
                 System.out.println(tableModel.getValueAt(table.getSelectedRow(), 0));
-                sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
-                sqlite.addLogs("EDIT", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "User deleted", new Timestamp(new Date().getTime()).toString());
+                
+                JTextField userPassword = new JPasswordField();
+   
+                
+                designer(userPassword, "YOUR PASSWORD FOR VERIFICATION");
 
+
+                Object[] message = {
+                 "Enter your own password for verification", userPassword
+                };
+
+                int result1 = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+
+                if (result1 == JOptionPane.OK_OPTION) {
+
+                    String userPassTemp = userPassword.getText();
+
+                    try {
+                        MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+
+                        byte[] messageDigest = md.digest(userPassTemp.getBytes()); 
+
+                        BigInteger no = new BigInteger(1, messageDigest); 
+
+                        userPassTemp = no.toString(16); 
+
+                        while (userPassTemp.length() < 32) { 
+                            userPassTemp = "0" + userPassTemp; 
+                        } 
+                    } catch (NoSuchAlgorithmException e) { 
+                        throw new RuntimeException(e); 
+                    }
+
+                    if(userPassTemp.equals(Frame.getUser().getPassword())){
+                        sqlite.removeUser(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
+                        sqlite.addLogs("EDIT", tableModel.getValueAt(table.getSelectedRow(), 0).toString(), "User deleted", new Timestamp(new Date().getTime()).toString());
+
+                            
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Your password does not match.");
+                    }
+                }
+                    
                 
                 //      CLEAR TABLE
                 for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -451,8 +531,48 @@ public class MgmtUser extends javax.swing.JPanel {
                     
                 System.out.println(selectedUser + " " + lockedVal);
                 
-                sqlite.toggleUserLock(selectedUser, lockedVal);
-                sqlite.addLogs("EDIT", selectedUser, "User lock toggled", new Timestamp(new Date().getTime()).toString());               
+                JTextField userPassword = new JPasswordField();
+   
+                
+                designer(userPassword, "YOUR PASSWORD FOR VERIFICATION");
+
+
+                Object[] message = {
+                 "Enter your own password for verification", userPassword
+                };
+
+                int result1 = JOptionPane.showConfirmDialog(null, message, "CHANGE PASSWORD", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null);
+
+                if (result1 == JOptionPane.OK_OPTION) {
+
+                    String userPassTemp = userPassword.getText();
+
+                    try {
+                        MessageDigest md = MessageDigest.getInstance("SHA-512"); 
+
+                        byte[] messageDigest = md.digest(userPassTemp.getBytes()); 
+
+                        BigInteger no = new BigInteger(1, messageDigest); 
+
+                        userPassTemp = no.toString(16); 
+
+                        while (userPassTemp.length() < 32) { 
+                            userPassTemp = "0" + userPassTemp; 
+                        } 
+                    } catch (NoSuchAlgorithmException e) { 
+                        throw new RuntimeException(e); 
+                    }
+
+                    if(userPassTemp.equals(Frame.getUser().getPassword())){
+                        sqlite.toggleUserLock(selectedUser, lockedVal);
+                        sqlite.addLogs("EDIT", selectedUser, "User lock toggled", new Timestamp(new Date().getTime()).toString()); 
+                            
+                    }else{
+                        JOptionPane.showMessageDialog(null, "Your password does not match.");
+                    }
+                }
+                
+                              
             }
                 //      CLEAR TABLE
             for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
@@ -663,7 +783,7 @@ public class MgmtUser extends javax.swing.JPanel {
 
                                 if(hasUppercase && hasNum && hasSymbol && passIs6){ // if password passes all requirements
                                     if(password.getText().equals(confpass.getText())){ // if new password and confirmation field has the same input
-                                        sqlite.changePassword(Frame.getUser().getUsername(), password.getText());
+                                        sqlite.changePassword(tableModel.getValueAt(table.getSelectedRow(), 0).toString(), password.getText());
                                         System.out.println(Frame.getUser().getUsername() + " changed their password to " + password.getText());
 
 
