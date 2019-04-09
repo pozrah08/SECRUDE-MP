@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -193,6 +194,8 @@ public class Login extends javax.swing.JPanel {
             System.out.println("===Locked Out=== ");
             JOptionPane.showMessageDialog(null, "You have been locked out.");
             //update log
+            frame.main.sqlite.addLogs("LOCKOUT", username, "Lockout after too many failed attempts", 
+                                        new Timestamp(new Date().getTime()).toString());
           
         }
     }//GEN-LAST:event_loginBtnActionPerformed

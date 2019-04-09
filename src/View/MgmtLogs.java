@@ -176,8 +176,8 @@ public class MgmtLogs extends javax.swing.JPanel {
         System.out.println("New log file created.");
                 
         // REMOVE ALL ROWS IN DB
-//        sqlite.dropLogsTable();
-//        sqlite.createLogsTable();
+        sqlite.dropLogsTable();
+        sqlite.createLogsTable();
 
     }//GEN-LAST:event_clearBtnActionPerformed
 
