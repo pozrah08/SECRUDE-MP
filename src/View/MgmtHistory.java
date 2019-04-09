@@ -194,7 +194,12 @@ public class MgmtHistory extends javax.swing.JPanel {
 
     private void searchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBtnActionPerformed
         JTextField searchFld = new JTextField("0");
-        designer(searchFld, "SEARCH USERNAME OR PRODUCT");
+        if(currentUserRole.equals("client")){
+            designer(searchFld, "SEARCH PRODUCT");
+        }else{
+            designer(searchFld, "SEARCH USERNAME OR PRODUCT");
+        }
+        
 
         Object[] message = {
             searchFld
