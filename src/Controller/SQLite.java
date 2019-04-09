@@ -165,7 +165,7 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, Security.cleanString(name));
+                pstmt.setString(1, Security.cleanString(name).trim());
                 pstmt.setInt(2, stock);
                 pstmt.setDouble(3, price);
                 pstmt.executeUpdate();
@@ -173,6 +173,8 @@ public class SQLite {
     }
     
     public void addUser(String username, String password) {
+        password = Security.cleanString(password).trim();
+        
          // hash the password
         try { 
             MessageDigest md = MessageDigest.getInstance("SHA-512"); 
@@ -191,13 +193,12 @@ public class SQLite {
             throw new RuntimeException(e); 
         }
         
-//         String sql = "INSERT INTO users(username,password) VALUES('" + username + "','" + password + "')";
         String sql = "INSERT INTO users(username,password) VALUES(?,?)";
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, Security.cleanString(username));
-                pstmt.setString(2, Security.cleanString(password));
+                pstmt.setString(1, Security.cleanString(username).trim());
+                pstmt.setString(2, Security.cleanString(password).trim());
                 pstmt.executeUpdate();
         } catch (Exception ex) {}
     }
@@ -287,7 +288,7 @@ public class SQLite {
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
             
-            pstmt.setString(1, Security.cleanString(username));
+            pstmt.setString(1, Security.cleanString(username).trim());
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -302,6 +303,8 @@ public class SQLite {
     }
     
     public void addUser(String username, String password, int role) {
+        password = Security.cleanString(password).trim();
+        
          // hash the password
         try { 
             MessageDigest md = MessageDigest.getInstance("SHA-512"); 
@@ -324,8 +327,8 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, Security.cleanString(username));
-            pstmt.setString(2, Security.cleanString(password));
+            pstmt.setString(1, Security.cleanString(username).trim());
+            pstmt.setString(2, Security.cleanString(password).trim());
             pstmt.setInt(3, role);
             pstmt.executeUpdate();
             
@@ -371,7 +374,7 @@ public class SQLite {
         Product product = null;
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, Security.cleanString(name));
+            pstmt.setString(1, Security.cleanString(name).trim());
             ResultSet rs = pstmt.executeQuery();
                 product = new Product(rs.getString("name"),
                                        rs.getInt("stock"),
@@ -385,7 +388,7 @@ public class SQLite {
         
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, Security.cleanString(newName));
+            pstmt.setString(1, Security.cleanString(newName).trim());
             pstmt.setInt(2, newStock);
             pstmt.setDouble(3, newPrice);
             pstmt.setString(4, oldName);
@@ -394,6 +397,8 @@ public class SQLite {
     }
     
     public void changePassword(String username, String password){
+        password = Security.cleanString(password).trim();
+        
         try { 
             MessageDigest md = MessageDigest.getInstance("SHA-512"); 
   
@@ -415,7 +420,7 @@ public class SQLite {
              
         try (Connection conn = DriverManager.getConnection(driverURL);
             PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, Security.cleanString(password));
+            pstmt.setString(1, Security.cleanString(password).trim());
             pstmt.setString(2, username);
             pstmt.executeUpdate();
         } catch (Exception ex) {}

@@ -45,13 +45,11 @@ public class MgmtUser extends javax.swing.JPanel {
                 editRoleBtn.setVisible(false);
                 deleteBtn.setVisible(false);
                 lockBtn.setVisible(false);
-                chgpassBtn.setText("CHANGE OWN PASS");
                 table.getTableHeader().setVisible(false);
                 break;
                 
             case "staff":
             case "manager":
-                chgpassBtn.setText("CHANGE OWN PASS");
                 table.removeColumn(table.getColumnModel().getColumn(1));
                 break;
                 
