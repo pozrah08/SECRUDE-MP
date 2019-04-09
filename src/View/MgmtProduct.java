@@ -206,29 +206,33 @@ public class MgmtProduct extends javax.swing.JPanel {
                 int stock = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 1).toString());
                 int toBuy = Integer.parseInt(stockFld.getText());
                 
-                if( stock > 0 && stock >= toBuy){
-                    String product = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
-                    
-                    sqlite.addHistory(Frame.getUser().getUsername(), product, toBuy, new Timestamp(new Date().getTime()).toString());
-                    sqlite.updateProduct(product, product, stock - toBuy, Double.parseDouble(tableModel.getValueAt(table.getSelectedRow(), 2).toString()));
-                    
-                    //      CLEAR TABLE
-                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                        tableModel.removeRow(0);
-                    }
+                if(toBuy > 0){
+                    if( stock > 0 && stock >= toBuy){
+                        String product = tableModel.getValueAt(table.getSelectedRow(), 0).toString();
 
-                    //      LOAD CONTENTS
-                    ArrayList<Product> products = sqlite.getProduct();
-                    for(int nCtr = 0; nCtr < products.size(); nCtr++){
-                        tableModel.addRow(new Object[]{
-                            products.get(nCtr).getName(), 
-                            products.get(nCtr).getStock(), 
-                            products.get(nCtr).getPrice()});
+                        sqlite.addHistory(Frame.getUser().getUsername(), product, toBuy, new Timestamp(new Date().getTime()).toString());
+                        sqlite.updateProduct(product, product, stock - toBuy, Double.parseDouble(tableModel.getValueAt(table.getSelectedRow(), 2).toString()));
+
+                        //      CLEAR TABLE
+                        for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                            tableModel.removeRow(0);
+                        }
+
+                        //      LOAD CONTENTS
+                        ArrayList<Product> products = sqlite.getProduct();
+                        for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                            tableModel.addRow(new Object[]{
+                                products.get(nCtr).getName(), 
+                                products.get(nCtr).getStock(), 
+                                products.get(nCtr).getPrice()});
+                        }
+
+                    }else{
+                        String errorMsg = "Not enough " + tableModel.getValueAt(table.getSelectedRow(), 0).toString() + " on stock.";
+                        JOptionPane.showMessageDialog(null, errorMsg);
                     }
-                    
-                    
                 }else{
-                    System.out.println("NOT ENOUGH ON STOCK.");
+                    JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
                 }
                 
                 System.out.println(stockFld.getText());
@@ -257,24 +261,36 @@ public class MgmtProduct extends javax.swing.JPanel {
                 System.out.println(stockFld.getText());
                 System.out.println(priceFld.getText());
                
-                sqlite.addProduct(nameFld.getText(), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
+                ArrayList<Product> nProducts = sqlite.getProduct();
+                Boolean productExists = false;
                 
-                //      CLEAR TABLE
-                for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
-                    tableModel.removeRow(0);
+                for(int i =0; i< nProducts.size(); i++){
+                    if(nProducts.get(i).getName().toLowerCase().equals(nameFld.getText().trim().toLowerCase())){
+                        productExists = true;
+                    }
                 }
+                
+                if(!productExists){
+                    sqlite.addProduct(Security.cleanString(nameFld.getText().trim()), Integer.parseInt(stockFld.getText()), Double.parseDouble(priceFld.getText()));
 
-                //      LOAD CONTENTS
-                ArrayList<Product> products = sqlite.getProduct();
-                for(int nCtr = 0; nCtr < products.size(); nCtr++){
-                    tableModel.addRow(new Object[]{
-                        products.get(nCtr).getName(), 
-                        products.get(nCtr).getStock(), 
-                        products.get(nCtr).getPrice()});
+                    //      CLEAR TABLE
+                    for(int nCtr = tableModel.getRowCount(); nCtr > 0; nCtr--){
+                        tableModel.removeRow(0);
+                    }
+
+                    //      LOAD CONTENTS
+                    ArrayList<Product> products = sqlite.getProduct();
+                    for(int nCtr = 0; nCtr < products.size(); nCtr++){
+                        tableModel.addRow(new Object[]{
+                            products.get(nCtr).getName(), 
+                            products.get(nCtr).getStock(), 
+                            products.get(nCtr).getPrice()});
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Product already exists.");
                 }
-                
             }else{
-                System.out.println("PLEASE ENTER A VALID AMOUNT");
+                JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
             }
             
         }

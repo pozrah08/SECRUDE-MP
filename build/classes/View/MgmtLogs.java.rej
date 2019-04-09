@@ -1,0 +1,9 @@
+diff a/src/View/MgmtLogs.java b/src/View/MgmtLogs.java	(rejected hunks)
+@@ -157,7 +157,6 @@
+             sqlite.DEBUG_MODE.setValue(false);
+         else
+             sqlite.DEBUG_MODE.setValue(true);
+-        System.out.println(sqlite.DEBUG_MODE.getValue());
+     }//GEN-LAST:event_debugBtnActionPerformed
+ 
+ 
