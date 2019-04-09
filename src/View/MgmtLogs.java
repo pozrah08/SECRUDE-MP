@@ -9,7 +9,9 @@ import Controller.SQLite;
 import Model.Logs;
 import Utilities.Security;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -178,6 +180,8 @@ public class MgmtLogs extends javax.swing.JPanel {
         // REMOVE ALL ROWS IN DB
         sqlite.dropLogsTable();
         sqlite.createLogsTable();
+        
+        sqlite.addLogs("EDIT", Frame.getUser().getUsername(), "User cleared logs", new Timestamp(new Date().getTime()).toString());
 
     }//GEN-LAST:event_clearBtnActionPerformed
 
