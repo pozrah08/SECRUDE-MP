@@ -289,7 +289,7 @@ public class Frame extends javax.swing.JFrame {
         main.sqlite.addLogs("NOTICE", username, "User creation successful", new Timestamp(new Date().getTime()).toString());
     }
     
-    public void setUser(User user){
+    public static void setUser(User user){
         currentUser = user;
     }
     
